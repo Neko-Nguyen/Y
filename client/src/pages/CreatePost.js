@@ -1,12 +1,32 @@
 import "./CreatePost.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
 function CreatePost() {
+   const initialValues = {
+      title: "",
+      postText: "",
+      username: "",
+   };
 
+   const validationSchema = Yup.object().shape({
+      title: Yup.string().required("You need to add a title!"),
+      postText: Yup.string().required("You need to add some description!"),
+      username: Yup.string().min(3).max(15).required("You need to add your username!"),
+   });
+
+   const onSubmit = (data) => {
+      axios.post("http://localhost:3001/posts", data);
+   };
 
    return (
       <div class="main">
-         <Formik>
+         <Formik 
+            initialValues={initialValues} 
+            onSubmit={onSubmit} 
+            validationSchema={validationSchema}
+         >
             <Form class="input">
                <Field 
                   autocomplete="off"
@@ -14,6 +34,7 @@ function CreatePost() {
                   name="username" 
                   placeholder="Neko..."
                />
+               <ErrorMessage name="username" component="span"/>
                <label>Username</label>
 
                <Field 
@@ -22,6 +43,7 @@ function CreatePost() {
                   name="title" 
                   placeholder="Silksong is great..."
                />
+               <ErrorMessage name="title" component="span"/>
                <label>Title</label>
 
                <Field 
@@ -30,6 +52,7 @@ function CreatePost() {
                   name="postText" 
                   placeholder="Hating Silksong is a such a bad rage bait..."
                />
+               <ErrorMessage name="postText" component="span"/>
                <label>Description</label>
 
                <button type="submit" id="submit-btn"> Create Post </button>

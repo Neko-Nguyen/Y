@@ -34,7 +34,7 @@ input:focus {
 #create-post-username {
    box-sizing: border-box;
    border-bottom: 1px solid #b1b1b1;
-   width: 100px;
+   width: 200px;
 }
 
 #create-post-title {
@@ -43,15 +43,19 @@ input:focus {
 
 #create-post-description {
    border: 1px solid #b1b1b1;
-   padding-bottom: 100px; 
+   padding-bottom: 200px; 
 }
 
 #submit-btn {
    box-sizing: border-box;
-   width: 100px;
+   width: 200px;
    border: none;
    border-radius: 0;
    padding: 10px;
    background: #222222;
    color: #ececec;
+}
+
+span {
+   color: #e00000;
 }
