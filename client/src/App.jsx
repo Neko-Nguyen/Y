@@ -1,15 +1,17 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { Image } from "react";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
 
 function App() {
   return (
-    <div class="App">
+    <div className="App">
       <Router>
-        <Link to="/" class="create-post"> HomePage</Link>
-        <Link to="/createpost" class="create-post"> Create a post </Link>
+        {/* <Image src="/img/logo.png" alt="logo" class="logo"/> */}
+        <Link to="/" className="create-post"> HomePage </Link>  
+        <Link to="/createpost" className="create-post"> Create a post </Link>
 
         <Routes>
           <Route path="/" element={<Home/>} />

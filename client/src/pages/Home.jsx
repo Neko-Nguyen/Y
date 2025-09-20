@@ -1,7 +1,7 @@
 import "./Home.css";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Home() {
    const [listOfPosts, setListOfPosts] = useState([]);
@@ -14,18 +14,22 @@ function Home() {
    }, []);
 
    return (
-      <div class="main">
+      <div className="main">
          {listOfPosts.map((value, key) => {
             return (
                <div 
-                  class="post post-hover" 
+                  className="post post-hover" 
                   onClick={() => {
                      navigate(`/post/${value.id}`);
                   }}
                > 
-                  <div class="footer"> {value.username} </div>
-                  <div class="title"> {value.title} </div>
-                  <div class="body"> {value.postText} </div>
+                  <div className="footer"> {value.username} </div>
+                  <div className="body"> {value.postText} </div>
+                  {value.createdAt && 
+                     <div className="time">
+                        {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
+                     </div>
+                  }
                </div>
             );
          })}

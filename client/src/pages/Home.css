@@ -28,11 +28,14 @@
   padding: 10px;
 }
 
-.title {
-  padding: 10px;
+.body {
+  text-align: start;
+  padding: 50px 20px;
 }
 
-.body {
-  text-align: center;
-  padding: 50px;
+.time {
+  text-align: right;
+  color: #777777;
+  font-size: 0.8rem;
+  padding: 0px 20px 10px 0px;
 }

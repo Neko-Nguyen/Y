@@ -1,7 +1,6 @@
-.input {
+.input-container {
   display: flex;
   flex-direction: column;
-  align-items: right;
   width: 550px;
 }
 
@@ -10,34 +9,23 @@ label {
    margin-bottom: 15px;
 }
 
-input {
+.input {
    font-size: 1.25rem;
    margin: 10px 0 0 0;
-   border-radius: 0;
-   border-top: none;
-   border-left: none;
-   border-right: none;
    padding: 5px;
+   border-radius: 0;
+   border: none;
+   border-bottom: 1px solid #b1b1b1;
+   height: 30px;
 }
 
-input:focus {
+.input:focus {
    outline: none;
    border-bottom: 1px solid #222222 !important;
 }
 
-#create-post-username {
-   box-sizing: border-box;
-   border-bottom: 1px solid #b1b1b1;
-   width: 200px;
-}
-
-#create-post-title {
-   border-bottom: 1px solid #b1b1b1;
-}
-
-#create-post-description {
-   border: 1px solid #b1b1b1;
-   padding-bottom: 200px; 
+textarea {
+   resize: none;
 }
 
 #submit-btn {

@@ -8,16 +8,9 @@ function CreatePost() {
    let navigate = useNavigate();
 
    const initialValues = {
-      title: "",
       postText: "",
       username: "",
    };
-
-   const validationSchema = Yup.object().shape({
-      title: Yup.string().required("You need to add a title!"),
-      postText: Yup.string().required("You need to add some description!"),
-      username: Yup.string().min(3).max(15).required("You need to add your username!"),
-   });
 
    const onSubmit = (data) => {
       axios.post("http://localhost:3001/posts", data).then((response) => {
@@ -25,18 +18,24 @@ function CreatePost() {
       });
    };
 
+   const validationSchema = Yup.object().shape({
+      postText: Yup.string().required("You need to add some description!"),
+      username: Yup.string().min(3).max(15).required("You need to add your username!"),
+   });
+
    return (
-      <div class="main">
+      <div className="main">
          <Formik 
             initialValues={initialValues} 
             onSubmit={onSubmit} 
             validationSchema={validationSchema}
          >
-            <Form class="input">
+            <Form className="input-container">
                <Field 
                   autocomplete="off"
-                  id="create-post-username" 
+                  id="create-post-username"
                   name="username" 
+                  className="input"
                   placeholder="Neko..."
                />
                <ErrorMessage name="username" component="span"/>
@@ -44,18 +43,15 @@ function CreatePost() {
 
                <Field 
                   autocomplete="off"
-                  id="create-post-title"
-                  name="title" 
-                  placeholder="Silksong is great..."
-               />
-               <ErrorMessage name="title" component="span"/>
-               <label>Title</label>
-
-               <Field 
-                  autocomplete="off"
-                  id="create-post-description"
-                  name="postText" 
+                  id="create-post-text"
+                  name="postText"
+                  className="input"
                   placeholder="Hating Silksong is a such a bad rage bait..."
+                  component="textarea"
+                  onInput={(event) => {
+                     event.target.style.height = "auto";
+                     event.target.style.height = event.target.scrollHeight + "px";
+                  }}
                />
                <ErrorMessage name="postText" component="span"/>
                <label>Description</label>
