@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Home() {
+
    const [listOfPosts, setListOfPosts] = useState([]);
    let navigate = useNavigate();
 
@@ -14,11 +15,11 @@ function Home() {
    }, []);
 
    return (
-      <div className="main">
+      <div className="main home list-of-posts">
          {listOfPosts.map((value, key) => {
             return (
                <div 
-                  className="post post-hover" 
+                  className="post home-post"
                   onClick={() => {
                      navigate(`/post/${value.id}`);
                   }}

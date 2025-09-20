@@ -34,12 +34,12 @@ function Post() {
    };
 
    return (
-      <div className="main">
+      <div className="main home post-full">
          <div className="post">
             <div className="footer"> {postObject.username} </div>
             <div className="body"> {postObject.postText} </div>
             {postObject.createdAt && (
-               <div id="single-post-time" className="time">
+               <div className="single-post-time time">
                   {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
                </div>
             )}
@@ -47,9 +47,8 @@ function Post() {
             <div className="create-comment-container">
                <textarea
                   autoComplete="off"
-                  id="create-comment-input"
                   type="text"
-                  className="input"
+                  className="create-comment-input input"
                   placeholder="Post your comment..."
                   value={newComment}
                   onInput={(event) => {
