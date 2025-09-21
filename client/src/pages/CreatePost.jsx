@@ -32,7 +32,7 @@ function CreatePost() {
          >
             <Form className="create-post">
                <Field 
-                  autocomplete="off"
+                  autoComplete="off"
                   name="username" 
                   className="input"
                   placeholder="Neko..."
@@ -41,7 +41,7 @@ function CreatePost() {
                <label>Username</label>
 
                <Field 
-                  autocomplete="off"
+                  autoComplete="off"
                   name="postText"
                   className="input"
                   placeholder="Hating Silksong is a such a bad rage bait..."
@@ -54,7 +54,7 @@ function CreatePost() {
                <ErrorMessage name="postText" component="span"/>
                <label>Description</label>
 
-               <button type="submit" class="submit-btn"> Create Post </button>
+               <button type="submit" className="submit-btn"> Create Post </button>
             </Form>
          </Formik>
       </div>

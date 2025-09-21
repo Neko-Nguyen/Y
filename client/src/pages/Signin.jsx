@@ -35,8 +35,7 @@ function Signin() {
             <Form>
                <div className="sign-in">
                   <Field
-                     autocomplete="off"
-                     id="username"
+                     autoComplete="off"
                      name="username"
                      className="input sign-in-input"
                      placeholder="Username"
@@ -44,17 +43,29 @@ function Signin() {
                   <ErrorMessage name="username" component="span"/>
 
                   <Field
-                     autocomplete="off"
-                     type="password"
+                     autoComplete="off"
                      id="password"
+                     type="password"
                      name="password"
                      className="input sign-in-input"
                      placeholder="Password"
                   />
+                  <div>
+                     <input 
+                        type="checkbox" 
+                        id="show-password" 
+                        className="show-password-checkbox"
+                        onChange={(event) => {
+                           let password = document.getElementById("password");
+                           password.type = event.target.checked ? "text" : "password";
+                        }}
+                     />
+                     <label htmlFor="show-password" className="show-password-label">Show Password</label>
+                  </div>
                   <ErrorMessage name="password" component="span"/>
                </div>
 
-               <button type="submit" class="sign-in-btn">Sign in</button>
+               <button type="submit" className="sign-in-btn">Sign in</button>
             </Form>
          </Formik>
       </div>

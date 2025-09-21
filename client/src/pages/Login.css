@@ -1,0 +1,43 @@
+.log-in-container {
+   position: relative;
+   margin-top: 100px;
+   background: #cecece;
+   border-radius: 10px;
+   height: 350px;
+}
+
+/* input */
+.log-in {
+   display: flex;
+   flex-direction: column;
+   margin: 50px;
+}
+
+.log-in-input {
+   border-radius: 5px;
+   border: 2px solid #ffffff;
+   background: #cecece;
+   padding: 15px 10px;
+}
+
+.log-in-input:focus {
+   border: 3px solid #009648;
+   border-bottom: 2px solid #014421;
+   border-right: 2px solid #014421;
+}
+
+.log-in-input:focus::placeholder {
+   color: #014421;
+}
+
+/* button */
+.log-in-btn {
+   background: #ffffff;
+   position: absolute;
+   bottom: 50px;
+   left: 50px;
+   padding: 10px;
+   width: 500px;
+   border: none;
+   border-radius: 17px;
+}

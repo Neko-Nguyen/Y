@@ -1,3 +1,4 @@
+import "./Login.css";
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
@@ -11,20 +12,51 @@ function Login() {
    const login = () => {
       const data = {username: username, password: password};
       axios.post("http://localhost:3001/auth/login", data).then((response) => {
-         console.log(response.data);
+         if (response.data.error) {
+            alert(response.data.error);
+         } else {
+            sessionStorage.setItem("accessToken", response.data);
+            navigate("/home");
+         }
       });
    };
 
    return (
-      <div className="main log-in">
-         <input type="text" class="input" onChange={(event) => {
-            setUsername(event.target.value);
-         }}/>
-         <input type="password" class="input" onChange={(event) => {
-            setPassword(event.target.value);
-         }}/>
+      <div className="main log-in-container">
+         <div className="log-in">
+            <input 
+               type="text" 
+               className="input log-in-input" 
+               onChange={(event) => {
+                  setUsername(event.target.value);
+               }}
+               placeholder="Username"
+            />
 
-         <button type="submit" class="sign-in-btn" onClick={login}>Login</button>
+            <input 
+               id="password"
+               type="password"  
+               className="input log-in-input"
+               onChange={(event) => {
+                  setPassword(event.target.value);
+               }}
+               placeholder="Password"
+            />
+            <div>
+               <input 
+                  type="checkbox" 
+                  id="show-password" 
+                  className="show-password-checkbox"
+                  onChange={(event) => {
+                     let password = document.getElementById("password");
+                     password.type = event.target.checked ? "text" : "password";
+                  }}
+               />
+               <label htmlFor="show-password" className="show-password-label">Show Password</label>
+            </div>
+         </div>
+
+         <button type="submit" className="sign-in-btn" onClick={login}>Login</button>
       </div>
    )
 }

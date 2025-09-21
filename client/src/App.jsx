@@ -11,7 +11,7 @@ function App() {
     <div className="App" id="app">
       <Router>
         <div className="nav-bar">
-          <Link to="/" className="logo-container">
+          <Link to="/home" className="logo-container">
             <img src="/logo.png" alt="logo" className="logo"/>
           </Link>
           <Link to="/createpost"> Create a post </Link>
@@ -20,7 +20,7 @@ function App() {
         </div>
         
         <Routes>
-          <Route path="/" element={<Home/>} />
+          <Route path="/home" element={<Home/>} />
           <Route path="/createpost" element={<CreatePost/>} />
           <Route path="/post/:id" element={<Post/>} />
           <Route path="/login" element={<Login/>} />
