@@ -1,13 +1,15 @@
 import "./Post.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Post() {
    let { id } = useParams();
    const [postObject, setPostObject] = useState({});
    const [comments, setComments] = useState([]);
    const [newComment, setNewComment] = useState("");
+   const { authState } = useContext(AuthContext);
 
    useEffect(() => {
       axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
@@ -22,18 +24,19 @@ function Post() {
    const addComment = () => {
       axios
          .post("http://localhost:3001/comments", {
-            commentBody: newComment, 
-            PostId: id,
-         }, {
-            headers: {
-               accessToken: localStorage.getItem("accessToken")
+               commentBody: newComment, 
+               PostId: id,
+            }, {
+               headers: {
+                  accessToken: localStorage.getItem("accessToken")
+               }
             }
-         })
+         )
          .then((response) => {
             if (response.data.error) {
                alert(response.data.error);
             } else {
-               const commentToAdd = { 
+               const commentToAdd = {
                   commentBody: newComment,
                   username: response.data.username,
                };
@@ -43,10 +46,23 @@ function Post() {
          });
    };
 
+   const deleteComment = (id) => {
+      axios.delete(`http://localhost:3001/comments/${id}`, {
+            headers: {
+               accessToken: localStorage.getItem("accessToken")
+            }
+         }
+      ).then(() => {
+         setComments(comments.filter((val) => {
+            return val.id != id;
+         }));
+      });
+   }
+
    return (
       <div className="main home post-full">
          <div className="post">
-            <div className="footer"> {postObject.username} </div>
+            <div className="username"> {postObject.username} </div>
             <div className="body"> {postObject.postText} </div>
             {postObject.createdAt && (
                <div className="single-post-time time">
@@ -77,7 +93,19 @@ function Post() {
             {comments.map((value, key) => {
                return (
                   <div className="comment-container">
-                     <div className="footer"> {value.username} </div>
+                     <div className="footer">
+                        {authState.username == value.username ? (
+                           <button 
+                              className="delete-btn"
+                              onClick={() => {
+                                 deleteComment(value.id)
+                              }}
+                           >X</button>
+                        ) : (
+                           <div></div>
+                        )}
+                        <div className="username"> {value.username} </div>
+                     </div>
                      <div className="comment"> {value.commentBody} </div>
                      {value.createdAt && 
                         <div className="time">

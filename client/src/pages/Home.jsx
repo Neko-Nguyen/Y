@@ -24,7 +24,7 @@ function Home() {
                      navigate(`/post/${value.id}`);
                   }}
                > 
-                  <div className="footer"> {value.username} </div>
+                  <div className="username"> {value.username} </div>
                   <div className="body"> {value.postText} </div>
                   {value.createdAt && 
                      <div className="time">

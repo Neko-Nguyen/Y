@@ -10,7 +10,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 function App() {
-  const [authState, setAuthState] = useState(false);
+  const [authState, setAuthState] = useState({
+    username: "",
+    id: 0,
+    status: false
+  });
 
   useEffect(() => {
     axios
@@ -21,28 +25,54 @@ function App() {
       })
       .then((response) => {
         if (response.data.error) {
-          setAuthState(false);
+          setAuthState({
+            username: "",
+            id: 0,
+            status: false
+          });
         } else {
-          setAuthState(true);
+          setAuthState({
+            username: response.data.username,
+            id: response.data.id,
+            status: true
+          });
         } 
-      })
-  }, [])
+      });
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("accessToken");
+    setAuthState({
+      username: "",
+      id: 0,
+      status: false
+    });
+  };
 
   return (
     <div className="App" id="app">
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
           <div className="nav-bar">
-            <Link to="/home" className="logo-container">
-              <img src="/logo.png" alt="logo" className="logo"/>
-            </Link>
-            <Link to="/createpost"> Create a post </Link>
-            {!authState && (
-              <>
-                <Link to="/login"> Login</Link>
-                <Link to="/signin"> Signin</Link>
-              </>
-            )}
+            <div className="nav-bar-above">
+              <Link to="/home" className="logo-container">
+                <img src="/logo.png" alt="logo" className="logo"/>
+              </Link>
+              <Link to="/createpost" className="route">Create Post</Link>
+
+              {!authState.status ? (
+                <>
+                  <Link to="/login" className="route">Login</Link>
+                  <Link to="/signin" className="route">Sign In</Link>
+                </>
+              ) : (
+                <button onClick={logout} className="route">Log out</button>              
+              )}
+            </div>
+            
+            <div className="nav-bar-bottom">
+              <div className="user">{authState.username}</div>
+            </div>
           </div>
           
           <Routes>
