@@ -58,7 +58,6 @@ function App() {
               <Link to="/home" className="logo-container">
                 <img src="/logo.png" alt="logo" className="logo"/>
               </Link>
-              <Link to="/createpost" className="route">Create Post</Link>
 
               {!authState.status ? (
                 <>
@@ -68,6 +67,7 @@ function App() {
               ) : (
                 <button onClick={logout} className="route">Log out</button>              
               )}
+              <Link to="/createpost" className="route-post">Post</Link>
             </div>
             
             <div className="nav-bar-bottom">

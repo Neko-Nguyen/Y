@@ -26,11 +26,14 @@ function Home() {
                > 
                   <div className="username"> {value.username} </div>
                   <div className="body"> {value.postText} </div>
-                  {value.createdAt && 
-                     <div className="time">
-                        {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
-                     </div>
-                  }
+                  <div className="footer">
+                     <button className="like-btn">❤︎</button>
+                     {value.createdAt && 
+                        <div className="time">
+                           {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
+                        </div>
+                     }
+                  </div>
                </div>
             );
          })}

@@ -93,14 +93,14 @@ function Post() {
             {comments.map((value, key) => {
                return (
                   <div className="comment-container">
-                     <div className="footer">
+                     <div className="header">
                         {authState.username == value.username ? (
                            <button 
                               className="delete-btn"
                               onClick={() => {
                                  deleteComment(value.id)
                               }}
-                           >X</button>
+                           >✖</button>
                         ) : (
                            <div></div>
                         )}
