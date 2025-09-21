@@ -1,7 +1,9 @@
-.input-container {
+/* input */
+.create-post {
   display: flex;
   flex-direction: column;
   width: 550px;
+  margin: 25px;
 }
 
 label {
@@ -21,23 +23,21 @@ label {
 
 .input:focus {
    outline: none;
-   border-bottom: 1px solid #222222 !important;
-}
-
-textarea {
-   resize: none;
-}
-
-#submit-btn {
-   box-sizing: border-box;
-   width: 200px;
-   border: none;
-   border-radius: 0;
-   padding: 10px;
-   background: #222222;
-   color: #ececec;
+   border-bottom: 1px solid #222222;
 }
 
 span {
    color: #e00000;
+}
+
+/* button */
+.submit-btn {
+   margin: 10px 0;
+   margin-left: auto;
+   padding: 10px 15px;
+   border-radius: 25px;
+   border: none;
+   background: #222222;
+   color: #ececec;
+   width: 150px;
 }

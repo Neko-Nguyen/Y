@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
    let navigate = useNavigate();
-
+   
    const initialValues = {
       postText: "",
       username: "",
@@ -24,16 +24,15 @@ function CreatePost() {
    });
 
    return (
-      <div className="main">
+      <div className="main home">
          <Formik 
             initialValues={initialValues} 
             onSubmit={onSubmit} 
-            validationSchema={validationSchema}
+            validationSchema={validationSchema} 
          >
-            <Form className="input-container">
+            <Form className="create-post">
                <Field 
-                  autocomplete="off"
-                  id="create-post-username"
+                  autoComplete="off"
                   name="username" 
                   className="input"
                   placeholder="Neko..."
@@ -42,8 +41,7 @@ function CreatePost() {
                <label>Username</label>
 
                <Field 
-                  autocomplete="off"
-                  id="create-post-text"
+                  autoComplete="off"
                   name="postText"
                   className="input"
                   placeholder="Hating Silksong is a such a bad rage bait..."
@@ -56,7 +54,7 @@ function CreatePost() {
                <ErrorMessage name="postText" component="span"/>
                <label>Description</label>
 
-               <button type="submit" id="submit-btn"> Create Post </button>
+               <button type="submit" className="submit-btn"> Create Post </button>
             </Form>
          </Formik>
       </div>

@@ -23,23 +23,33 @@ function Post() {
       axios
          .post("http://localhost:3001/comments", {
             commentBody: newComment, 
-            PostId: id
+            PostId: id,
+         }, {
+            headers: {
+               accessToken: localStorage.getItem("accessToken")
+            }
          })
          .then((response) => {
-            const commentToAdd = {commentBody: newComment};
-            setComments([...comments, commentToAdd]);
-
-            setNewComment("");
+            if (response.data.error) {
+               alert(response.data.error);
+            } else {
+               const commentToAdd = { 
+                  commentBody: newComment,
+                  username: response.data.username,
+               };
+               setComments([...comments, commentToAdd]);
+               setNewComment("");
+            }
          });
    };
 
    return (
-      <div className="main">
+      <div className="main home post-full">
          <div className="post">
             <div className="footer"> {postObject.username} </div>
             <div className="body"> {postObject.postText} </div>
             {postObject.createdAt && (
-               <div id="single-post-time" className="time">
+               <div className="single-post-time time">
                   {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
                </div>
             )}
@@ -47,9 +57,8 @@ function Post() {
             <div className="create-comment-container">
                <textarea
                   autoComplete="off"
-                  id="create-comment-input"
                   type="text"
-                  className="input"
+                  className="create-comment-input input"
                   placeholder="Post your comment..."
                   value={newComment}
                   onInput={(event) => {
@@ -68,6 +77,7 @@ function Post() {
             {comments.map((value, key) => {
                return (
                   <div className="comment-container">
+                     <div className="footer"> {value.username} </div>
                      <div className="comment"> {value.commentBody} </div>
                      {value.createdAt && 
                         <div className="time">

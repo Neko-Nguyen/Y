@@ -1,14 +1,22 @@
-#single-post-time {
+.post-full {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.single-post-time {
    padding: 0 0 10px 0;
    margin: 0 20px;
    border-bottom: 1px solid #b1b1b1;
 }
 
-#create-comment-input {
+/* create comment */
+.create-comment-input {
+   font-size: 1.25rem;
    height: 30px;
 }
 
-#create-comment-input:focus {
+.create-comment-input:focus {
    height: 30px;
 }
 
