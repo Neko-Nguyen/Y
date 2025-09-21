@@ -26,7 +26,7 @@ function Post() {
             PostId: id,
          }, {
             headers: {
-               accessToken: sessionStorage.getItem("accessToken")
+               accessToken: localStorage.getItem("accessToken")
             }
          })
          .then((response) => {
@@ -38,7 +38,6 @@ function Post() {
                   username: response.data.username,
                };
                setComments([...comments, commentToAdd]);
-   
                setNewComment("");
             }
          });

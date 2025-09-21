@@ -1,13 +1,15 @@
 import "./Login.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom'
 import axios from "axios";
+import { AuthContext } from "../helpers/AuthContext";
 
 function Login() {
    let navigate = useNavigate();
    
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
+   const { setAuthState } = useContext(AuthContext);
 
    const login = () => {
       const data = {username: username, password: password};
@@ -15,7 +17,8 @@ function Login() {
          if (response.data.error) {
             alert(response.data.error);
          } else {
-            sessionStorage.setItem("accessToken", response.data);
+            localStorage.setItem("accessToken", response.data);
+            setAuthState(true);
             navigate("/home");
          }
       });
