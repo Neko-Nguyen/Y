@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
          username: username,
          password: hash,
       });
-      res.json("success");
+      res.json("Sign In Success");
    });
 });
 

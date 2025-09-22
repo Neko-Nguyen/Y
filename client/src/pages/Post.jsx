@@ -54,7 +54,7 @@ function Post() {
          }
       ).then(() => {
          setComments(comments.filter((val) => {
-            return val.id != id;
+            return val.id !== id;
          }));
       });
    }
@@ -94,7 +94,7 @@ function Post() {
                return (
                   <div className="comment-container">
                      <div className="header">
-                        {authState.username == value.username ? (
+                        {authState.username === value.username ? (
                            <button 
                               className="delete-btn"
                               onClick={() => {

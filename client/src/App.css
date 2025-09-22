@@ -170,6 +170,7 @@ button.route:hover {
   justify-content: space-between;
 }
 
+/* like button */
 .like-btn {
   margin: 5px;
   border: none;
@@ -180,7 +181,11 @@ button.route:hover {
 
 .like-btn:hover {
   background: #baffdb;
-  color: #00612f;
+  color: #00ac53;
+}
+
+.liked {
+  color: #00ac53;
 }
 
 .time {
