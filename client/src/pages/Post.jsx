@@ -36,10 +36,7 @@ function Post() {
             if (response.data.error) {
                alert(response.data.error);
             } else {
-               const commentToAdd = {
-                  commentBody: newComment,
-                  username: response.data.username,
-               };
+               const commentToAdd = response.data;
                setComments([...comments, commentToAdd]);
                setNewComment("");
             }
@@ -47,16 +44,17 @@ function Post() {
    };
 
    const deleteComment = (id) => {
-      axios.delete(`http://localhost:3001/comments/${id}`, {
+      axios
+         .delete(`http://localhost:3001/comments/${id}`, {
             headers: {
                accessToken: localStorage.getItem("accessToken")
             }
-         }
-      ).then(() => {
-         setComments(comments.filter((val) => {
-            return val.id !== id;
-         }));
-      });
+         })
+         .then(() => {
+            setComments(comments.filter((val) => {
+               return val.id !== id;
+            }));
+         });
    }
 
    return (
@@ -106,6 +104,7 @@ function Post() {
                         )}
                         <div className="username"> {value.username} </div>
                      </div>
+
                      <div className="comment"> {value.commentBody} </div>
                      {value.createdAt && 
                         <div className="time">

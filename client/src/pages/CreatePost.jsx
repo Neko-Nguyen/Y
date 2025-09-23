@@ -38,7 +38,7 @@ function CreatePost() {
                   placeholder="Neko..."
                />
                <ErrorMessage name="username" component="span"/>
-               <label>Username</label>
+               <label className="create-post-label">Username</label>
 
                <Field 
                   autoComplete="off"
@@ -52,7 +52,7 @@ function CreatePost() {
                   }}
                />
                <ErrorMessage name="postText" component="span"/>
-               <label>Description</label>
+               <label className="create-post-label">Description</label>
 
                <button type="submit" className="submit-btn"> Create Post </button>
             </Form>

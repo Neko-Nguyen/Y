@@ -3,6 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
+import { FavoriteBorder, Favorite } from "@mui/icons-material";
 
 function Home() {
    const [listOfPosts, setListOfPosts] = useState([]);
@@ -21,27 +22,29 @@ function Home() {
    }, [authState.id]);
 
    const LikeAPost = (postId) => {
-      axios
-         .post("http://localhost:3001/likes", {
-               PostId: postId
-            }, {
-               headers: {
-                  accessToken: localStorage.getItem("accessToken")
-               }
-            })
-         .then((response) => {
-            setListOfPosts(listOfPosts.map((post) => {
-               if (post.id !== postId) return post;
-
-               if (response.data.liked) {
-                  return { ...post, Likes: [...post.Likes, 0], liked: !post.liked };
-               } else {
-                  const likesArray = post.Likes;
-                  likesArray.pop();
-                  return { ...post, Likes: likesArray, liked: !post.liked };
-               }
-            }));
-         });
+      if (authState.id > 0) {
+         axios
+            .post("http://localhost:3001/likes", {
+                  PostId: postId
+               }, {
+                  headers: {
+                     accessToken: localStorage.getItem("accessToken")
+                  }
+               })
+            .then((response) => {
+               setListOfPosts(listOfPosts.map((post) => {
+                  if (post.id !== postId) return post;
+   
+                  if (response.data.liked) {
+                     return { ...post, Likes: [...post.Likes, 0], liked: true };
+                  } else {
+                     const likesArray = post.Likes;
+                     likesArray.pop();
+                     return { ...post, Likes: likesArray, liked: false };
+                  }
+               }));
+            });
+      }
    };
 
    return (
@@ -59,14 +62,23 @@ function Home() {
                   >{value.postText}</div>
 
                   <div className="footer">
-                     <div className="like-btn-container"> 
-                        <button
+                     <div className="like-btn-container">
+                        <div 
                            className={value.liked ? "like-btn liked" : "like-btn"}
                            onClick={() => {
                               LikeAPost(value.id);
                            }}
-                        >❤︎</button>
-                        <label className="like-btn-label">{value.Likes.length}</label>
+                        >
+                           {value.liked 
+                              ? <Favorite sx={{ fontSize: 15}}/>
+                              : <FavoriteBorder sx={{ fontSize: 15}}/>
+                           }
+                        </div>
+                        <label 
+                           className={value.liked ? "like-btn-label liked" : "like-btn-label"}
+                        >
+                           {value.Likes.length}
+                        </label>
                      </div>
 
                      {value.createdAt && 

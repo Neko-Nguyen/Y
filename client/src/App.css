@@ -172,11 +172,12 @@ button.route:hover {
 
 /* like button */
 .like-btn {
-  margin: 5px;
+  margin: 0 0 5px 5px;
+  padding: 5px 0 0 5px;
   border: none;
-  border-radius: 13px;
-  width: 25px;
-  height: 25px;
+  border-radius: 15px;
+  width: 20px;
+  height: 20px;
 }
 
 .like-btn:hover {
@@ -186,6 +187,15 @@ button.route:hover {
 
 .liked {
   color: #00ac53;
+}
+
+.like-btn-container {
+  display: flex;
+}
+
+.like-btn-label {
+  font-size: 0.9rem;
+  margin-top: 6px;
 }
 
 .time {
