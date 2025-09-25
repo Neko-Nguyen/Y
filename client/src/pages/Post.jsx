@@ -1,8 +1,10 @@
-import "./Post.css";
+import "../styles/Post.css";
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
+import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
+import { storage } from "../helpers/Storage";
 
 function Post() {
    let { id } = useParams();
@@ -10,29 +12,29 @@ function Post() {
    const [comments, setComments] = useState([]);
    const [newComment, setNewComment] = useState("");
    const { authState } = useContext(AuthContext);
+   const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
    useEffect(() => {
-      axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
+      axios.get(`${api}/posts/byId/${id}`).then((response) => {
          setPostObject(response.data);
       });
 
-      axios.get(`http://localhost:3001/comments/${id}`).then((response) => {
+      axios.get(`${api}/comments/${id}`).then((response) => {
          setComments(response.data);
       });
    }, []);
 
    const addComment = () => {
       axios
-         .post("http://localhost:3001/comments", {
+         .post(`${api}/comments`, {
                commentBody: newComment, 
                PostId: id,
             }, {
                headers: {
-                  accessToken: localStorage.getItem("accessToken")
+                  accessToken: localStorage.getItem(storage)
                }
-            }
-         )
+            })
          .then((response) => {
             if (response.data.error) {
                alert(response.data.error);
@@ -46,9 +48,9 @@ function Post() {
 
    const deleteComment = (id) => {
       axios
-         .delete(`http://localhost:3001/comments/${id}`, {
+         .delete(`${api}/comments/${id}`, {
             headers: {
-               accessToken: localStorage.getItem("accessToken")
+               accessToken: localStorage.getItem(storage)
             }
          })
          .then(() => {
@@ -60,9 +62,9 @@ function Post() {
 
    const deletePost = () => {
       axios
-         .delete(`http://localhost:3001/posts/${postObject.id}`, {
+         .delete(`${api}/posts/${postObject.id}`, {
             headers: {
-               accessToken: localStorage.getItem("accessToken")
+               accessToken: localStorage.getItem(storage)
             }
          })
          .then(() => {
@@ -73,6 +75,7 @@ function Post() {
    return (
       <div className="main home post-full">
          <div className="post">
+            <div className="go-back"></div>
             <div className="header">
                {authState.username === postObject.username ? (
                   <button 

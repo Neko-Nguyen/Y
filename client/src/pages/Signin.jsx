@@ -1,12 +1,14 @@
-import "./Signin.css";
-import React from 'react'
+import "../styles/Signin.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 
 function Signin() {
    let navigate = useNavigate();
+   const api = useContext(ApiEndpointContext);
 
    const initialValues = {
       username: "",
@@ -14,8 +16,9 @@ function Signin() {
    };
 
    const onSubmit = (data) => {
-      axios.post("http://localhost:3001/users", data).then((response) => {
+      axios.post(`${api}/users`, data).then((response) => {
          navigate("/home");
+         alert("Sign in successful");
       });
    };
 

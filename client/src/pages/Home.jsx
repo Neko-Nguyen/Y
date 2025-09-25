@@ -1,13 +1,16 @@
-import "./Home.css";
+import "../styles/Home.css";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../helpers/AuthContext";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { AuthContext } from "../helpers/AuthContext";
+import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
+import { storage } from "../helpers/Storage";
 
 function Home() {
    const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
+   const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
    useEffect(() => {
@@ -16,7 +19,7 @@ function Home() {
       }
 
       axios
-         .get("http://localhost:3001/posts")
+         .get(`${api}/posts`)
          .then((response) => {
             const updatedPosts = response.data.map((post) => {
                const isLiked = post.Likes.some((like) => like.UserId === authState.id);
@@ -29,11 +32,11 @@ function Home() {
    const LikeAPost = (postId) => {
       if (authState.id > 0) {
          axios
-            .post("http://localhost:3001/likes", {
+            .post(`${api}/likes`, {
                   PostId: postId
                }, {
                   headers: {
-                     accessToken: localStorage.getItem("accessToken")
+                     accessToken: localStorage.getItem(storage)
                   }
                })
             .then((response) => {

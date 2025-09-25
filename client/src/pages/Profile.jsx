@@ -1,19 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { AuthContext } from "../helpers/AuthContext";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { AuthContext } from "../helpers/AuthContext";
+import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
+import { storage } from "../helpers/Storage";
 
 function Profile() {
    let { id } = useParams();
    const [username, setUsername] = useState("");
    const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
+   const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
    useEffect(() => {
       axios
-         .get(`http://localhost:3001/users/basicinfo/${id}`)
+         .get(`${api}/users/basicinfo/${id}`)
          .then((response) => {
             setUsername(response.data.username);
             const updatedPosts = response.data.Posts.map((post) => {
@@ -27,11 +30,11 @@ function Profile() {
    const LikeAPost = (postId) => {
       if (authState.id > 0) {
          axios
-            .post("http://localhost:3001/likes", {
+            .post(`${api}/likes`, {
                   PostId: postId
                }, {
                   headers: {
-                     accessToken: localStorage.getItem("accessToken")
+                     accessToken: localStorage.getItem(storage)
                   }
                })
             .then((response) => {
