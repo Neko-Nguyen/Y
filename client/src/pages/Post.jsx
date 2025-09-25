@@ -1,6 +1,6 @@
 import "./Post.css";
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 
@@ -10,6 +10,7 @@ function Post() {
    const [comments, setComments] = useState([]);
    const [newComment, setNewComment] = useState("");
    const { authState } = useContext(AuthContext);
+   let navigate = useNavigate();
 
    useEffect(() => {
       axios.get(`http://localhost:3001/posts/byId/${id}`).then((response) => {
@@ -55,12 +56,34 @@ function Post() {
                return val.id !== id;
             }));
          });
-   }
+   };
+
+   const deletePost = () => {
+      axios
+         .delete(`http://localhost:3001/posts/${postObject.id}`, {
+            headers: {
+               accessToken: localStorage.getItem("accessToken")
+            }
+         })
+         .then(() => {
+            navigate("/home");
+         });
+   };
 
    return (
       <div className="main home post-full">
          <div className="post">
-            <div className="username"> {postObject.username} </div>
+            <div className="header">
+               {authState.username === postObject.username ? (
+                  <button 
+                     className="delete-btn"
+                     onClick={deletePost}
+                  >✖</button>
+               ) : (
+                  <div></div>
+               )}
+               <div className="username"> {postObject.username} </div>
+            </div>
             <div className="body"> {postObject.postText} </div>
             {postObject.createdAt && (
                <div className="single-post-time time">

@@ -1,26 +1,39 @@
 import "./CreatePost.css";
+import { useEffect, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/AuthContext";
 
 function CreatePost() {
+   const { authState } = useContext(AuthContext);
    let navigate = useNavigate();
+
+   useEffect(() => {
+      if (!authState.status) {
+         navigate("/login");
+      }
+   }, []);
    
    const initialValues = {
-      postText: "",
-      username: "",
+      postText: ""
    };
 
    const onSubmit = (data) => {
-      axios.post("http://localhost:3001/posts", data).then((response) => {
-         navigate("/home");
-      });
+      axios
+         .post("http://localhost:3001/posts", data, {
+               headers: {
+                  accessToken: localStorage.getItem("accessToken")
+               }
+            })
+         .then((response) => {
+            navigate("/home");
+         });
    };
 
    const validationSchema = Yup.object().shape({
-      postText: Yup.string().required("You need to add some description!"),
-      username: Yup.string().min(3).max(15).required("You need to add your username!"),
+      postText: Yup.string().required("You need to add some description!")
    });
 
    return (
@@ -31,15 +44,6 @@ function CreatePost() {
             validationSchema={validationSchema} 
          >
             <Form className="create-post">
-               <Field 
-                  autoComplete="off"
-                  name="username" 
-                  className="input"
-                  placeholder="Neko..."
-               />
-               <ErrorMessage name="username" component="span"/>
-               <label className="create-post-label">Username</label>
-
                <Field 
                   autoComplete="off"
                   name="postText"

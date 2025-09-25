@@ -14,9 +14,8 @@ function Signin() {
    };
 
    const onSubmit = (data) => {
-      axios.post("http://localhost:3001/auth", data).then((response) => {
-         // navigate("/");
-         console.log(data);
+      axios.post("http://localhost:3001/users", data).then((response) => {
+         navigate("/home");
       });
    };
 

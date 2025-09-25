@@ -1,6 +1,6 @@
 import "./Home.css";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
@@ -11,14 +11,19 @@ function Home() {
    let navigate = useNavigate();
 
    useEffect(() => {
-      axios.get("http://localhost:3001/posts").then((response) => {
-         const updatedPosts = response.data.map((post) => {
-            console.log("use");
-            const isLiked = post.Likes.some((like) => like.UserId === authState.id);
-            return { ...post, liked: isLiked };
+      if (!authState.status) {
+         navigate("/login");
+      }
+
+      axios
+         .get("http://localhost:3001/posts")
+         .then((response) => {
+            const updatedPosts = response.data.map((post) => {
+               const isLiked = post.Likes.some((like) => like.UserId === authState.id);
+               return { ...post, liked: isLiked };
+            });
+            setListOfPosts(updatedPosts);
          });
-         setListOfPosts(updatedPosts);
-      });
    }, [authState.id]);
 
    const LikeAPost = (postId) => {
@@ -51,8 +56,13 @@ function Home() {
       <div className="main home list-of-posts">
          {listOfPosts.map((value, key) => {
             return (
-               <div className="post home-post"> 
-                  <div className="username">{value.username}</div>
+               <div className="post home-post">
+                  <div className="header">
+                     <div></div>
+                     <Link to={`/profile/${value.UserId}`} className="username">
+                        {value.username}
+                     </Link>
+                  </div>
 
                   <div 
                      className="body"

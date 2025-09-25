@@ -8,6 +8,7 @@ import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
 import Login from "./pages/Login";
 import Signin from "./pages/Signin";
+import Profile from "./pages/Profile";
 import PageNotFound from "./pages/PageNotFound";
 
 function App() {
@@ -16,10 +17,11 @@ function App() {
     id: 0,
     status: false
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/auth/auth", { 
+      .get("http://localhost:3001/users/auth", { 
         headers: {
           accessToken: localStorage.getItem("accessToken"),
         },
@@ -38,6 +40,9 @@ function App() {
             status: true
           });
         } 
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -49,6 +54,10 @@ function App() {
       status: false
     });
   };
+
+  if (loading) {
+    return <h1>Loading...</h1>
+  }
 
   return (
     <div className="App" id="app">
@@ -66,9 +75,11 @@ function App() {
                   <Link to="/signin" className="route">Sign In</Link>
                 </>
               ) : (
-                <button onClick={logout} className="route">Log out</button>              
+                <>
+                  <button onClick={logout} className="route">Log out</button>              
+                  <Link to="/createpost" className="route-post">Post</Link>
+                </>
               )}
-              <Link to="/createpost" className="route-post">Post</Link>
             </div>
             
             <div className="nav-bar-bottom">
@@ -82,6 +93,7 @@ function App() {
             <Route path="/post/:id" exact element={<Post/>}/>
             <Route path="/login" exact element={<Login/>}/>
             <Route path="/signin" exact element={<Signin/>}/>
+            <Route path="/profile/:id" exact element={<Profile/>}/>
             <Route path="*" exact element={<PageNotFound/>}/>
           </Routes>
         </Router>
