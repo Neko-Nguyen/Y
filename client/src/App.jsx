@@ -42,7 +42,7 @@ function App() {
             id: response.data.id,
             status: true
           });
-        } 
+        }
       })
       .finally(() => {
         setLoading(false);

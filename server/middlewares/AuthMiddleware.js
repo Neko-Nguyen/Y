@@ -1,11 +1,9 @@
-import { storage } from "../helpers/StorageContext";
-
 const { verify } = require("jsonwebtoken");
 
 const validateToken = (req, res, next) => {
-   const accessToken = req.header(storage);
-
+   const accessToken = req.header("accessToken");
    if (!accessToken) return res.json({ error: "User not logged in!" });
+
    try {
       const validToken = verify(accessToken, "important secret");
       req.user = validToken;

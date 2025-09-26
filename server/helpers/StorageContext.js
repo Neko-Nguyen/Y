@@ -1,3 +1,0 @@
-import { IS_LOCAL_SERVER, LOCAL_STORAGE, REMOTE_STORAGE } from "./Constants";
-
-export const storage = IS_LOCAL_SERVER ? LOCAL_STORAGE : REMOTE_STORAGE;
