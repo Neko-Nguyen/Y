@@ -44,9 +44,10 @@ body {
 
 /* logo */
 .logo {
-  margin-right: auto;
-  width: 39px;
-  height: 26px;
+  position: relative;
+  right: 3px;
+  width: 45px;
+  height: 30px;
 }
 
 .logo-container {
@@ -64,29 +65,36 @@ body {
 }
 
 /* routes */
-.route {
+.route-container {
   align-self: flex-start;
   margin-top: 5px;
-  padding: 15px 25px;
   border-radius: 30px;
-  font-size: 1.25rem;
-  text-decoration: none;
-  color: #111111;
+  line-height: 50px;
 }
 
-.route:hover {
+.route-container:hover {
   background: #ececec;
+}
+
+.route-icon {
+  position: relative;
+  display: inline;
+  top: 10px;
+  left: 10px;
+}
+
+.route {
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: #111111;
+  padding: 15px 25px 15px 5px;
+  margin-left: 20px;
 }
 
 button.route {
   cursor: pointer;
-  text-align: start;
   border: none;
-  background: #ffffff;
-}
-
-button.route:hover {
-  background: #ececec;
+  background: none;
 }
 
 .route-post {

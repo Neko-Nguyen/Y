@@ -15,7 +15,7 @@ function Home() {
 
    useEffect(() => {
       if (!authState.status) {
-         navigate("/login");
+         navigate("/");
       }
 
       axios

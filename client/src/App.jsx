@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import { AuthContext } from "./helpers/AuthContext";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Intro from "./pages/Intro";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
 import Post from "./pages/Post";
@@ -12,6 +13,9 @@ import Profile from "./pages/Profile";
 import PageNotFound from "./pages/PageNotFound";
 import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
 import { storage } from "./helpers/Storage";
+import LoginIcon from "@mui/icons-material/Login";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -74,12 +78,21 @@ function App() {
 
               {!authState.status ? (
                 <>
-                  <Link to="/login" className="route">Login</Link>
-                  <Link to="/signin" className="route">Sign In</Link>
+                  <div className="route-container">
+                    <div className="route-icon"><LoginIcon sx={{ fontSize: 35}}/></div>
+                    <Link to="/login" className="route">Login</Link>
+                  </div>
+                  <div className="route-container">
+                    <div className="route-icon"><AssignmentIndIcon sx={{ fontSize: 35}}/></div>
+                    <Link to="/signin" className="route">Sign In</Link>
+                  </div>
                 </>
               ) : (
                 <>
-                  <button onClick={logout} className="route">Log out</button>              
+                  <div className="route-container">
+                    <div className="route-icon"><LogoutIcon sx={{ fontSize: 35}}/></div>
+                    <button onClick={logout} className="route">Log out</button>
+                  </div>
                   <Link to="/createpost" className="route-post">Post</Link>
                 </>
               )}
@@ -91,7 +104,7 @@ function App() {
           </div>
           
           <Routes>
-            <Route path="/" exact element={<Home/>}/>
+            <Route path="/" exact element={<Intro/>}/>
             <Route path="/home" exact element={<Home/>}/>
             <Route path="/createpost" exact element={<CreatePost/>}/>
             <Route path="/post/:id" exact element={<Post/>}/>
