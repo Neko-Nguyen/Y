@@ -13,16 +13,10 @@ import Profile from "./pages/Profile";
 import PageNotFound from "./pages/PageNotFound";
 import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
 import { storage } from "./helpers/Storage";
-import LoginIcon from "@mui/icons-material/Login";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import LogoutIcon from '@mui/icons-material/Logout';
+import Navbar from "./components/Navbar";
 
 function App() {
-  const [authState, setAuthState] = useState({
-    username: "",
-    id: 0,
-    status: false
-  });
+  const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
   const [loading, setLoading] = useState(true);
   const api = useContext(ApiEndpointContext);
 
@@ -35,11 +29,7 @@ function App() {
       })
       .then((response) => {
         if (response.data.error) {
-          setAuthState({
-            username: "",
-            id: 0,
-            status: false
-          });
+          setAuthState({ username: "", id: 0, status: false });
         } else {
           setAuthState({
             username: response.data.username,
@@ -55,11 +45,7 @@ function App() {
 
   const logout = () => {
     localStorage.removeItem(storage);
-    setAuthState({
-      username: "",
-      id: 0,
-      status: false
-    });
+    setAuthState({ username: "", id: 0, status: false });
   };
 
   if (loading) {
@@ -70,38 +56,7 @@ function App() {
     <div className="App" id="app">
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
-          <div className="nav-bar">
-            <div className="nav-bar-above">
-              <Link to="/home" className="logo-container">
-                <img src="/logo.png" alt="logo" className="logo"/>
-              </Link>
-
-              {!authState.status ? (
-                <>
-                  <div className="route-container">
-                    <div className="route-icon"><LoginIcon sx={{ fontSize: 35}}/></div>
-                    <Link to="/login" className="route">Login</Link>
-                  </div>
-                  <div className="route-container">
-                    <div className="route-icon"><AssignmentIndIcon sx={{ fontSize: 35}}/></div>
-                    <Link to="/signin" className="route">Sign In</Link>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="route-container">
-                    <div className="route-icon"><LogoutIcon sx={{ fontSize: 35}}/></div>
-                    <button onClick={logout} className="route">Log out</button>
-                  </div>
-                  <Link to="/createpost" className="route-post">Post</Link>
-                </>
-              )}
-            </div>
-            
-            <div className="nav-bar-bottom">
-              <div className="user">{authState.username}</div>
-            </div>
-          </div>
+          <Navbar authState={authState}/>
           
           <Routes>
             <Route path="/" exact element={<Intro/>}/>

@@ -1,3 +1,4 @@
+import "../styles/Profile.css";
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -8,8 +9,9 @@ import { storage } from "../helpers/Storage";
 
 function Profile() {
    let { id } = useParams();
-   const [username, setUsername] = useState("");
    const [listOfPosts, setListOfPosts] = useState([]);
+   const [username, setUsername] = useState("");
+   const [joinTime, setJoinTime] = useState("");
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
@@ -18,11 +20,12 @@ function Profile() {
       axios
          .get(`${api}/users/basicinfo/${id}`)
          .then((response) => {
-            setUsername(response.data.username);
             const updatedPosts = response.data.Posts.map((post) => {
                const isLiked = post.Likes.some((like) => like.UserId === authState.id);
                return { ...post, liked: isLiked };
             });
+            setUsername(response.data.username);
+            setJoinTime(response.data.createdAt);
             setListOfPosts(updatedPosts);
          });
    }, []);
@@ -55,16 +58,25 @@ function Profile() {
 
    return (
       <div className="main home">
-         <div className="basicInfo"><h1>{username}</h1></div>
+         <div className="basic-info">
+            <h2>{username}</h2>
+            {joinTime && 
+               <div className="join-time">
+                  {joinTime.substring(11, 16)} · {joinTime.substring(0, 10)}
+               </div>
+            }
+         </div>
          <div className="list-of-posts">
             {listOfPosts.map((value, key) => {
                return (
-                  <div className="post home-post"> 
+                  <div 
+                     className="post home-post"
+                  >
                      <div className="header">
-                        <div></div>
                         <Link to={`/profile/${value.UserId}`} className="username">
                            {value.username}
                         </Link>
+                        <div></div>
                      </div>
    
                      <div 

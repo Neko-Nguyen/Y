@@ -59,32 +59,40 @@ function Home() {
       <div className="main home list-of-posts">
          {listOfPosts.map((value, key) => {
             return (
-               <div className="post home-post">
+               <div 
+                  className="post home-post"
+                  onClick={() => {
+                     navigate(`/post/${value.id}`);
+                  }}
+               >
                   <div className="header">
-                     <div></div>
-                     <Link to={`/profile/${value.UserId}`} className="username">
+                     <Link 
+                        to={`/profile/${value.UserId}`} 
+                        className="username"
+                        onClick={(e) => {
+                           e.stopPropagation();
+                        }}
+                     >
                         {value.username}
                      </Link>
+                     
+                     <div></div>
                   </div>
 
-                  <div 
-                     className="body"
-                     onClick={() => {
-                        navigate(`/post/${value.id}`);
-                     }}
-                  >{value.postText}</div>
+                  <div className="body">{value.postText}</div>
 
                   <div className="footer">
                      <div className="like-btn-container">
                         <div 
                            className={value.liked ? "like-btn liked" : "like-btn"}
-                           onClick={() => {
+                           onClick={(e) => {
                               LikeAPost(value.id);
+                              e.stopPropagation();
                            }}
                         >
                            {value.liked 
-                              ? <Favorite sx={{ fontSize: 15}}/>
-                              : <FavoriteBorder sx={{ fontSize: 15}}/>
+                              ? <Favorite sx={{ fontSize: 15 }}/>
+                              : <FavoriteBorder sx={{ fontSize: 15 }}/>
                            }
                         </div>
                         <label 

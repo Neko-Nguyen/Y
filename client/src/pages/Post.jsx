@@ -1,10 +1,11 @@
 import "../styles/Post.css";
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { storage } from "../helpers/Storage";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 function Post() {
    let { id } = useParams();
@@ -39,6 +40,7 @@ function Post() {
             if (response.data.error) {
                alert(response.data.error);
             } else {
+               console.log(response.data);
                const commentToAdd = response.data;
                setComments([...comments, commentToAdd]);
                setNewComment("");
@@ -75,8 +77,22 @@ function Post() {
    return (
       <div className="main home post-full">
          <div className="post">
-            <div className="go-back"></div>
+            <div className="go-back">
+               <KeyboardBackspaceIcon 
+                  sx={{ fontSize: 25 }} 
+                  className="go-back-icon"
+                  onClick={() => {
+                     navigate("/home");
+                  }}
+               />
+               <div className="go-back-text">Post</div>
+            </div>
+
             <div className="header">
+               <Link to={`/profile/${id}`} className="username">
+                  {postObject.username}
+               </Link>
+
                {authState.username === postObject.username ? (
                   <button 
                      className="delete-btn"
@@ -85,9 +101,10 @@ function Post() {
                ) : (
                   <div></div>
                )}
-               <div className="username"> {postObject.username} </div>
             </div>
+
             <div className="body"> {postObject.postText} </div>
+
             {postObject.createdAt && (
                <div className="single-post-time time">
                   {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
@@ -118,6 +135,10 @@ function Post() {
                return (
                   <div className="comment-container">
                      <div className="header">
+                        <Link to={`/profile/${value.id}`} className="username">
+                           {value.username}
+                        </Link>
+
                         {authState.username === value.username ? (
                            <button 
                               className="delete-btn"
@@ -128,10 +149,10 @@ function Post() {
                         ) : (
                            <div></div>
                         )}
-                        <div className="username"> {value.username} </div>
                      </div>
 
                      <div className="comment"> {value.commentBody} </div>
+
                      {value.createdAt && 
                         <div className="time">
                            {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
