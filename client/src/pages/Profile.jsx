@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { storage } from "../helpers/Storage";
@@ -58,6 +59,17 @@ function Profile() {
 
    return (
       <div className="main home">
+         <div className="go-back">
+            <KeyboardBackspaceIcon 
+               sx={{ fontSize: 25 }} 
+               className="go-back-icon"
+               onClick={() => {
+                  navigate("/home");
+               }}
+            />
+         <div className="go-back-text">{username}</div>
+         </div>
+
          <div className="basic-info">
             <h2>{username}</h2>
             {joinTime && 
@@ -66,6 +78,7 @@ function Profile() {
                </div>
             }
          </div>
+         
          <div className="list-of-posts">
             {listOfPosts.map((value, key) => {
                return (
@@ -73,9 +86,7 @@ function Profile() {
                      className="post home-post"
                   >
                      <div className="header">
-                        <Link to={`/profile/${value.UserId}`} className="username">
-                           {value.username}
-                        </Link>
+                        <Link to={`/profile/${id}`} className="username">{username}</Link>
                         <div></div>
                      </div>
    

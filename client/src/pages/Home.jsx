@@ -1,11 +1,10 @@
 import "../styles/Home.css";
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
+import { getHomePosts, likePost } from "../api/Post";
 
 function Home() {
    const [listOfPosts, setListOfPosts] = useState([]);
@@ -14,46 +13,15 @@ function Home() {
    let navigate = useNavigate();
 
    useEffect(() => {
-      if (!authState.status) {
-         navigate("/");
-      }
-
-      axios
-         .get(`${api}/posts`)
-         .then((response) => {
-            const updatedPosts = response.data.map((post) => {
-               const isLiked = post.Likes.some((like) => like.UserId === authState.id);
-               return { ...post, liked: isLiked };
-            });
-            setListOfPosts(updatedPosts);
-         });
+      if (!authState.status) navigate("/");
+      getHomePosts(api, authState.id, setListOfPosts);
    }, [authState.id]);
 
-   const LikeAPost = (postId) => {
+   const thisLikeAPost = (postId) => {
       if (authState.id > 0) {
-         axios
-            .post(`${api}/likes`, {
-                  PostId: postId
-               }, {
-                  headers: {
-                     accessToken: localStorage.getItem(storage)
-                  }
-               })
-            .then((response) => {
-               setListOfPosts(listOfPosts.map((post) => {
-                  if (post.id !== postId) return post;
-   
-                  if (response.data.liked) {
-                     return { ...post, Likes: [...post.Likes, 0], liked: true };
-                  } else {
-                     const likesArray = post.Likes;
-                     likesArray.pop();
-                     return { ...post, Likes: likesArray, liked: false };
-                  }
-               }));
-            });
+         likePost(postId, api, listOfPosts, setListOfPosts);
       }
-   };
+   }
 
    return (
       <div className="main home list-of-posts">
@@ -86,7 +54,7 @@ function Home() {
                         <div 
                            className={value.liked ? "like-btn liked" : "like-btn"}
                            onClick={(e) => {
-                              LikeAPost(value.id);
+                              thisLikeAPost(value.id);
                               e.stopPropagation();
                            }}
                         >

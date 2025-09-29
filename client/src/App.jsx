@@ -1,8 +1,6 @@
 import "./styles/App.css";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import { AuthContext } from "./helpers/AuthContext";
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Intro from "./pages/Intro";
 import Home from "./pages/Home";
 import CreatePost from "./pages/CreatePost";
@@ -11,9 +9,10 @@ import Login from "./pages/Login";
 import Signin from "./pages/Signin";
 import Profile from "./pages/Profile";
 import PageNotFound from "./pages/PageNotFound";
-import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
-import { storage } from "./helpers/Storage";
 import Navbar from "./components/Navbar";
+import { AuthContext } from "./helpers/AuthContext";
+import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
+import { getAuth } from "./api/Auth";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
@@ -21,33 +20,10 @@ function App() {
   const api = useContext(ApiEndpointContext);
 
   useEffect(() => {
-    axios
-      .get(`${api}/users/auth`, { 
-        headers: {
-          accessToken: localStorage.getItem(storage),
-        },
-      })
-      .then((response) => {
-        if (response.data.error) {
-          setAuthState({ username: "", id: 0, status: false });
-        } else {
-          setAuthState({
-            username: response.data.username,
-            id: response.data.id,
-            status: true
-          });
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getAuth(api, setAuthState, setLoading);
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem(storage);
-    setAuthState({ username: "", id: 0, status: false });
-  };
-
+  
   if (loading) {
     return <h1>Loading...</h1>
   }
@@ -56,7 +32,7 @@ function App() {
     <div className="App" id="app">
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
-          <Navbar authState={authState}/>
+          <Navbar authState={authState} setAuthState={setAuthState}/>
           
           <Routes>
             <Route path="/" exact element={<Intro/>}/>
