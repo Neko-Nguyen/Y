@@ -20,12 +20,19 @@ function App() {
   const api = useContext(ApiEndpointContext);
 
   useEffect(() => {
-    getAuth(api, setAuthState, setLoading);
-  }, []);
+    const fetchAuth = async () => {
+      const data = await getAuth(api);
+      setAuthState(data);
+    }
+    
+    fetchAuth().then(() => {
+      setLoading(false);
+    });
+  }, [api, setAuthState, setLoading]);
 
   
   if (loading) {
-    return <h1>Loading...</h1>
+    return <h1>Loading...</h1>;
   }
 
   return (

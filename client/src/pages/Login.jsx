@@ -12,9 +12,12 @@ function Login() {
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
-   const thisLogin = () => {
-      const data = {username: username, password: password};
-      login(api, data, setAuthState, navigate);
+   const thisLogin = async () => {
+      const userData = {username: username, password: password};
+      const data = await login(api, userData);
+      
+      setAuthState(data);
+      if (data.id) navigate("/home");
    };
 
    return (

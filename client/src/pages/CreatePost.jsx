@@ -14,7 +14,7 @@ function CreatePost() {
 
    useEffect(() => {
       if (!authState.status) navigate("/login");
-   }, []);
+   }, [authState, navigate]);
    
    const initialValues = {
       postText: ""

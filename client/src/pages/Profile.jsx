@@ -1,59 +1,36 @@
 import "../styles/Profile.css";
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
+import { likePost } from "../api/Post";
+import { getBasicInfo } from "../api/BasicInfo";
 
 function Profile() {
    let { id } = useParams();
-   const [listOfPosts, setListOfPosts] = useState([]);
    const [username, setUsername] = useState("");
    const [joinTime, setJoinTime] = useState("");
+   const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
    useEffect(() => {
-      axios
-         .get(`${api}/users/basicinfo/${id}`)
-         .then((response) => {
-            const updatedPosts = response.data.Posts.map((post) => {
-               const isLiked = post.Likes.some((like) => like.UserId === authState.id);
-               return { ...post, liked: isLiked };
-            });
-            setUsername(response.data.username);
-            setJoinTime(response.data.createdAt);
-            setListOfPosts(updatedPosts);
-         });
-   }, []);
+      async function fetchData() {
+         const basicInfo = await getBasicInfo(api, id, authState);
+         setUsername(basicInfo.username);
+         setJoinTime(basicInfo.joinTime);
+         setListOfPosts(basicInfo.listOfPosts);
+      }
 
-   const LikeAPost = (postId) => {
+      fetchData();
+   }, [api, id, authState]);
+
+   const thisLikeAPost = (postId) => {
       if (authState.id > 0) {
-         axios
-            .post(`${api}/likes`, {
-                  PostId: postId
-               }, {
-                  headers: {
-                     accessToken: localStorage.getItem(storage)
-                  }
-               })
-            .then((response) => {
-               setListOfPosts(listOfPosts.map((post) => {
-                  if (post.id !== postId) return post;
-   
-                  if (response.data.liked) {
-                     return { ...post, Likes: [...post.Likes, 0], liked: true };
-                  } else {
-                     const likesArray = post.Likes;
-                     likesArray.pop();
-                     return { ...post, Likes: likesArray, liked: false };
-                  }
-               }));
-            });
+         likePost(postId, api, listOfPosts, setListOfPosts);
       }
    };
 
@@ -102,7 +79,7 @@ function Profile() {
                            <div 
                               className={value.liked ? "like-btn liked" : "like-btn"}
                               onClick={() => {
-                                 LikeAPost(value.id);
+                                 thisLikeAPost(value.id);
                               }}
                            >
                               {value.liked 

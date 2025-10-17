@@ -2,47 +2,51 @@ import axios from "axios";
 import { storage } from "../helpers/Storage";
 
 export function authHeader() {
-    return { headers: { accessToken: localStorage.getItem(storage) } };
+    return { 
+        headers: { 
+            accessToken: localStorage.getItem(storage) 
+        } 
+    };
 };
 
-export function logout(setAuthState) {
+export function logout() {
     localStorage.removeItem(storage);
-    setAuthState({ username: "", id: 0, status: false });
+    return { 
+        username: "", 
+        id: 0, 
+        status: false 
+    };
 };
 
-export function login(api, data, setAuthState, navigate) {
-    axios
-        .post(`${api}/users/login`, data)
-        .then((response) => {
-            if (response.data.error) {
-                alert(response.data.error);
-            } else {
-                localStorage.setItem(storage, response.data.token);
-                setAuthState({
-                    username: response.data.username,
-                    id: response.data.id,
-                    status: true
-                });
-                navigate("/home");
-            }
-        });
+export async function login(api, userData) {
+    const response = await axios.post(`${api}/users/login`, userData);
+    const data = response.data;
+
+    if (data.error) {
+        alert(data.error);
+        return { username: "", id: 0, status: false };
+    }
+
+    localStorage.setItem(storage, data.token);
+    return {
+        username: data.username,
+        id: data.id,
+        status: true
+    };
 };
 
-export function getAuth(api, setAuthState, setLoading) {
-    axios
-        .get(`${api}/users/auth`, authHeader())
-        .then((response) => {
-            if (response.data.error) {
-                setAuthState({ username: "", id: 0, status: false });
-            } else {
-                setAuthState({
-                    username: response.data.username,
-                    id: response.data.id,
-                    status: true
-                });
-            }
-        })
-        .finally(() => {
-            setLoading(false);
-        });
+export async function getAuth(api) {
+    const response = await axios.get(`${api}/users/auth`, authHeader());
+    const data = response.data;
+
+    if (data.error) {
+        alert(data.error);
+        return { username: "", id: 0, status: false };
+    }
+
+    return {
+        username: data.username,
+        id: data.id,
+        status: true
+    };
 }

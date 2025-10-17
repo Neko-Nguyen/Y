@@ -15,13 +15,13 @@ function Home() {
    useEffect(() => {
       if (!authState.status) navigate("/");
       getHomePosts(api, authState.id, setListOfPosts);
-   }, [authState.id]);
+   }, [api, authState.id, authState.status, navigate, setListOfPosts]);
 
    const thisLikeAPost = (postId) => {
       if (authState.id > 0) {
          likePost(postId, api, listOfPosts, setListOfPosts);
       }
-   }
+   };
 
    return (
       <div className="main home list-of-posts">
