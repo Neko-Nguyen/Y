@@ -1,3 +1,5 @@
-import { IS_LOCAL_SERVER, LOCAL_STORAGE, REMOTE_STORAGE } from "./Constants";
+const IS_LOCAL_SERVER = process.env.REACT_APP_IS_LOCAL_SERVER === 'true';
+const LOCAL_STORAGE = process.env.REACT_APP_LOCAL_STORAGE;
+const REMOTE_STORAGE = process.env.REACT_APP_REMOTE_STORAGE;
 
 export const storage = IS_LOCAL_SERVER ? LOCAL_STORAGE : REMOTE_STORAGE;

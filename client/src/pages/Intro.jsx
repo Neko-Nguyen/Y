@@ -1,8 +1,9 @@
 import "../styles/Intro.css";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { AuthContext } from "../helpers/AuthContext";
 
 gsap.registerPlugin(SplitText);
 
@@ -10,6 +11,7 @@ function Intro() {
   let navigate = useNavigate();
   const intro1Ref = useRef(null);
   const intro2Ref = useRef(null);
+  const { authState } = useContext(AuthContext);
 
   useEffect(() => {
     const timeLine = gsap.timeline();
@@ -42,8 +44,9 @@ function Intro() {
   return (
     <div 
         className="intro-container"
-        onClick={() => {
-            navigate("/login");
+        onClick={() => { 
+          if (authState.id > 0) navigate("/home");
+          else navigate("/login"); 
         }}
     >
         <h1 ref={intro1Ref} className="intro-line-1">

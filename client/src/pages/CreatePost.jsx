@@ -2,11 +2,10 @@ import "../styles/CreatePost.css";
 import { useEffect, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
+import { createPost } from "../api/Post";
 
 function CreatePost() {
    const { authState } = useContext(AuthContext);
@@ -14,26 +13,15 @@ function CreatePost() {
    let navigate = useNavigate();
 
    useEffect(() => {
-      if (!authState.status) {
-         navigate("/login");
-      }
-   }, []);
+      if (!authState.status) navigate("/login");
+   }, [authState, navigate]);
    
    const initialValues = {
       postText: ""
    };
 
-   const onSubmit = (data) => {
-      axios
-         .post(`${api}/posts`, data, {
-               headers: {
-                  accessToken: localStorage.getItem(storage)
-               }
-            })
-         .then((response) => {
-            console.log(response);
-            navigate("/home");
-         });
+   const fetchCreatePost = async (data) => {
+      await createPost(api, data, navigate);
    };
 
    const validationSchema = Yup.object().shape({
@@ -44,7 +32,7 @@ function CreatePost() {
       <div className="main home">
          <Formik 
             initialValues={initialValues} 
-            onSubmit={onSubmit} 
+            onSubmit={fetchCreatePost} 
             validationSchema={validationSchema} 
          >
             <Form className="create-post">
