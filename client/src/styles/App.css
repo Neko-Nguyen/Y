@@ -67,7 +67,9 @@ body {
 /* routes */
 .route-container {
   height: 50px;
+  display: flex;
   align-self: flex-start;
+  text-decoration: none;
   cursor: pointer;
   margin-top: 5px;
   border-radius: 30px;
@@ -81,13 +83,13 @@ body {
 .route-icon {
   position: relative;
   display: inline;
+  color: #111111;
   top: 7px;
   left: 10px;
 }
 
 .route {
   font-size: 1.5rem;
-  text-decoration: none;
   color: #111111;
   cursor: pointer;
   margin-left: 20px;

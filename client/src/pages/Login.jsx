@@ -1,34 +1,23 @@
 import "../styles/Login.css";
 import { useState, useContext } from "react";
-import { useNavigate } from 'react-router-dom'
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
+import { login } from "../api/User";
 
 function Login() {
-   let navigate = useNavigate();
-   
    const [username, setUsername] = useState("");
    const [password, setPassword] = useState("");
    const { setAuthState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
+   let navigate = useNavigate();
 
-   const login = () => {
-      const data = {username: username, password: password};
-      axios.post(`${api}/users/login`, data).then((response) => {
-         if (response.data.error) {
-            alert(response.data.error);
-         } else {
-            localStorage.setItem(storage, response.data.token);
-            setAuthState({
-               username: response.data.username,
-               id: response.data.id,
-               status: true
-            });
-            navigate("/home");
-         }
-      });
+   const fetchLogin = async () => {
+      const userData = {username: username, password: password};
+      const data = await login(api, userData);
+      
+      setAuthState(data);
+      if (data.id) navigate("/home");
    };
 
    return (
@@ -66,7 +55,7 @@ function Login() {
             </div>
          </div>
 
-         <button type="submit" className="sign-in-btn" onClick={login}>Login</button>
+         <button type="submit" className="sign-in-btn" onClick={fetchLogin}>Login</button>
       </div>
    )
 }
