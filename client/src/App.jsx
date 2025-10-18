@@ -12,7 +12,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
-import { getAuth } from "./api/Auth";
+import { getAuth } from "./api/User";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false });

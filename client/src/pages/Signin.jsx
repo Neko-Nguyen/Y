@@ -1,10 +1,10 @@
 import "../styles/Signin.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
+import { signin } from "../api/User";
 
 function Signin() {
    let navigate = useNavigate();
@@ -15,11 +15,8 @@ function Signin() {
       password: "",
    };
 
-   const onSubmit = (data) => {
-      axios.post(`${api}/users`, data).then((response) => {
-         navigate("/home");
-         alert("Sign in successful");
-      });
+   const fetchSignIn = async (data) => {
+      await signin(api, data, navigate);
    };
 
    const validationSchema = Yup.object().shape({
@@ -31,7 +28,7 @@ function Signin() {
       <div className="main sign-in-container">
          <Formik
             initialValues={initialValues}
-            onSubmit={onSubmit}
+            onSubmit={fetchSignIn}
             validationSchema={validationSchema}
          >
             <Form>

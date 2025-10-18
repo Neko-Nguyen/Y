@@ -6,7 +6,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { likePost } from "../api/Post";
-import { getBasicInfo } from "../api/BasicInfo";
+import { getBasicInfo } from "../api/User";
 
 function Profile() {
    let { id } = useParams();
@@ -18,19 +18,20 @@ function Profile() {
    let navigate = useNavigate();
 
    useEffect(() => {
-      async function fetchData() {
+      const fetchBasicInfo = async () => {
          const basicInfo = await getBasicInfo(api, id, authState);
          setUsername(basicInfo.username);
          setJoinTime(basicInfo.joinTime);
          setListOfPosts(basicInfo.listOfPosts);
       }
 
-      fetchData();
+      fetchBasicInfo();
    }, [api, id, authState]);
 
-   const thisLikeAPost = (postId) => {
+   const fetchLikePost = async (postId) => {
       if (authState.id > 0) {
-         likePost(postId, api, listOfPosts, setListOfPosts);
+         const updatedPosts = await likePost(postId, api, listOfPosts);
+         setListOfPosts(updatedPosts);
       }
    };
 
@@ -79,7 +80,7 @@ function Profile() {
                            <div 
                               className={value.liked ? "like-btn liked" : "like-btn"}
                               onClick={() => {
-                                 thisLikeAPost(value.id);
+                                 fetchLikePost(value.id);
                               }}
                            >
                               {value.liked 

@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { login } from "../api/Auth";
+import { login } from "../api/User";
 
 function Login() {
    const [username, setUsername] = useState("");
@@ -12,7 +12,7 @@ function Login() {
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
-   const thisLogin = async () => {
+   const fetchLogin = async () => {
       const userData = {username: username, password: password};
       const data = await login(api, userData);
       
@@ -55,7 +55,7 @@ function Login() {
             </div>
          </div>
 
-         <button type="submit" className="sign-in-btn" onClick={thisLogin}>Login</button>
+         <button type="submit" className="sign-in-btn" onClick={fetchLogin}>Login</button>
       </div>
    )
 }

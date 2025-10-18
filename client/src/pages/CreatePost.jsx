@@ -20,8 +20,8 @@ function CreatePost() {
       postText: ""
    };
 
-   const onSubmit = (data) => {
-      createPost(api, data, navigate);
+   const fetchCreatePost = async (data) => {
+      await createPost(api, data, navigate);
    };
 
    const validationSchema = Yup.object().shape({
@@ -32,7 +32,7 @@ function CreatePost() {
       <div className="main home">
          <Formik 
             initialValues={initialValues} 
-            onSubmit={onSubmit} 
+            onSubmit={fetchCreatePost} 
             validationSchema={validationSchema} 
          >
             <Form className="create-post">

@@ -1,41 +1,47 @@
 import axios from "axios";
-import { authHeader } from "./Auth";
+import { authHeader } from "./User";
 
-export function createPost(api, data, navigate) {
-   axios
-      .post(`${api}/posts`, data, authHeader())
-      .then((response) => {
-         console.log(response);
-         navigate("/home");
-      });
+export async function createPost(api, data, navigate) {
+   await axios.post(`${api}/posts`, data, authHeader());
+   navigate("/home");
 };
 
-export function getHomePosts(api, userId, setListOfPosts) {
-   axios
-      .get(`${api}/posts`)
-      .then((response) => {
-         const updatedPosts = response.data.map((post) => {
-            const isLiked = post.Likes.some((like) => like.UserId === userId);
-            return { ...post, liked: isLiked };
-         });
-         setListOfPosts(updatedPosts);
-      });
+export async function deletePost(api, postId, navigate) {
+   await axios.delete(`${api}/posts/${postId}`, authHeader());
+   navigate("/home");
+}
+
+export async function getHomePosts(api, userId) {
+   const response = await axios.get(`${api}/posts`);
+   const data = response.data;
+
+   const updatedPosts = data.map((post) => {
+      const isLiked = post.Likes.some((like) => like.UserId === userId);
+      return { ...post, liked: isLiked };
+   });
+   return updatedPosts;
 };
 
-export function likePost(postId, api, listOfPosts, setListOfPosts) {
-   axios
-      .post(`${api}/likes`, { PostId: postId }, authHeader())
-      .then((response) => {
-         setListOfPosts(listOfPosts.map((post) => {
-            if (post.id !== postId) return post;
+export async function likePost(postId, api, listOfPosts) {
+   const response = await axios.post(`${api}/likes`, { PostId: postId }, authHeader());
+   const data = response.data;
 
-            if (response.data.liked) {
-               return { ...post, Likes: [...post.Likes, 0], liked: true };
-            } else {
-               const likesArray = post.Likes;
-               likesArray.pop();
-               return { ...post, Likes: likesArray, liked: false };
-            }
-         }));
-      });
+   const updatedPosts = listOfPosts.map((post) => {
+      if (post.id !== postId) return post;
+
+      if (data.liked) {
+         return { ...post, Likes: [...post.Likes, 0], liked: true };
+      } else {
+         const likesArray = post.Likes;
+         likesArray.pop();
+         return { ...post, Likes: likesArray, liked: false };
+      }
+   });
+
+   return updatedPosts;
+};
+
+export async function getPostById(api, id) {
+   const response = await axios.get(`${api}/posts/byId/${id}`);
+   return response.data;
 };

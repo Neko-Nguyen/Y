@@ -3,7 +3,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
-import { logout } from "../api/Auth";
+import { logout } from "../api/User";
 
 function Navbar({ authState, setAuthState }) {
   return (

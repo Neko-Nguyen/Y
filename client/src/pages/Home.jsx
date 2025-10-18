@@ -14,12 +14,22 @@ function Home() {
 
    useEffect(() => {
       if (!authState.status) navigate("/");
-      getHomePosts(api, authState.id, setListOfPosts);
+      const fetchData = async () => {
+         const data = await getHomePosts(api, authState.id);
+         setListOfPosts(data);
+      }
+
+      fetchData();
    }, [api, authState.id, authState.status, navigate, setListOfPosts]);
 
    const thisLikeAPost = (postId) => {
+      const fetchLikePost = async () => {
+         const updatedPosts = await likePost(postId, api, listOfPosts);
+         setListOfPosts(updatedPosts);
+      }
+
       if (authState.id > 0) {
-         likePost(postId, api, listOfPosts, setListOfPosts);
+         fetchLikePost();
       }
    };
 
