@@ -1,11 +1,11 @@
 import "../styles/Post.css";
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { deletePost, getPostById } from "../api/Post";
+import { addComment, deleteComment, getCommentsByPostId, } from "../api/Comment";
 
 function Post() {
    let { id } = useParams();
@@ -17,61 +17,35 @@ function Post() {
    let navigate = useNavigate();
 
    useEffect(() => {
-      axios.get(`${api}/posts/byId/${id}`).then((response) => {
-         setPostObject(response.data);
-      });
+      const fetchPostById = async () => {
+         const data = await getPostById(api, id);
+         setPostObject(data);
+      };
+      const fetchCommentsByPostId = async () => {         
+         const data = await getCommentsByPostId(api, id);
+         setComments(data);
+      };
 
-      axios.get(`${api}/comments/${id}`).then((response) => {
-         setComments(response.data);
-      });
-   }, []);
+      fetchPostById();
+      fetchCommentsByPostId();
+   }, [api, id, setPostObject, setComments]);
 
-   const addComment = () => {
-      axios
-         .post(`${api}/comments`, {
-               commentBody: newComment, 
-               PostId: id,
-            }, {
-               headers: {
-                  accessToken: localStorage.getItem(storage)
-               }
-            })
-         .then((response) => {
-            if (response.data.error) {
-               alert(response.data.error);
-            } else {
-               console.log(response.data);
-               const commentToAdd = response.data;
-               setComments([...comments, commentToAdd]);
-               setNewComment("");
-            }
-         });
+   const fetchAddComment = async () => {
+      const commentsData = await addComment(api, comments, 
+            { commentBody: newComment, PostId: id }
+         );
+
+      setComments(commentsData);
+      setNewComment("");
    };
 
-   const deleteComment = (id) => {
-      axios
-         .delete(`${api}/comments/${id}`, {
-            headers: {
-               accessToken: localStorage.getItem(storage)
-            }
-         })
-         .then(() => {
-            setComments(comments.filter((val) => {
-               return val.id !== id;
-            }));
-         });
+   const fetchDeleteComment = async (id) => {
+      const newComments = await deleteComment(api, id, comments);
+      setComments(newComments);
    };
 
-   const deletePost = () => {
-      axios
-         .delete(`${api}/posts/${postObject.id}`, {
-            headers: {
-               accessToken: localStorage.getItem(storage)
-            }
-         })
-         .then(() => {
-            navigate("/home");
-         });
+   const fetchDeletePost = async () => {
+      await deletePost(api, postObject.id, navigate);
    };
 
    return (
@@ -96,7 +70,7 @@ function Post() {
                {authState.username === postObject.username ? (
                   <button 
                      className="delete-btn"
-                     onClick={deletePost}
+                     onClick={fetchDeletePost}
                   >✖</button>
                ) : (
                   <div></div>
@@ -126,7 +100,7 @@ function Post() {
                      setNewComment(event.target.value);
                   }}
                />
-               <button className="create-comment-btn" onClick={addComment}> Comment </button>
+               <button className="create-comment-btn" onClick={fetchAddComment}> Comment </button>
             </div>
          </div>  
 
@@ -143,7 +117,7 @@ function Post() {
                            <button 
                               className="delete-btn"
                               onClick={() => {
-                                 deleteComment(value.id)
+                                 fetchDeleteComment(value.id)
                               }}
                            >✖</button>
                         ) : (

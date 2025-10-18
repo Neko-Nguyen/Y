@@ -1,63 +1,53 @@
 import "../styles/Profile.css";
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { storage } from "../helpers/Storage";
+import { likePost } from "../api/Post";
+import { getBasicInfo } from "../api/User";
 
 function Profile() {
    let { id } = useParams();
-   const [listOfPosts, setListOfPosts] = useState([]);
    const [username, setUsername] = useState("");
    const [joinTime, setJoinTime] = useState("");
+   const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
    useEffect(() => {
-      axios
-         .get(`${api}/users/basicinfo/${id}`)
-         .then((response) => {
-            const updatedPosts = response.data.Posts.map((post) => {
-               const isLiked = post.Likes.some((like) => like.UserId === authState.id);
-               return { ...post, liked: isLiked };
-            });
-            setUsername(response.data.username);
-            setJoinTime(response.data.createdAt);
-            setListOfPosts(updatedPosts);
-         });
-   }, []);
+      const fetchBasicInfo = async () => {
+         const basicInfo = await getBasicInfo(api, id, authState);
+         setUsername(basicInfo.username);
+         setJoinTime(basicInfo.joinTime);
+         setListOfPosts(basicInfo.listOfPosts);
+      }
 
-   const LikeAPost = (postId) => {
+      fetchBasicInfo();
+   }, [api, id, authState]);
+
+   const fetchLikePost = async (postId) => {
       if (authState.id > 0) {
-         axios
-            .post(`${api}/likes`, {
-                  PostId: postId
-               }, {
-                  headers: {
-                     accessToken: localStorage.getItem(storage)
-                  }
-               })
-            .then((response) => {
-               setListOfPosts(listOfPosts.map((post) => {
-                  if (post.id !== postId) return post;
-   
-                  if (response.data.liked) {
-                     return { ...post, Likes: [...post.Likes, 0], liked: true };
-                  } else {
-                     const likesArray = post.Likes;
-                     likesArray.pop();
-                     return { ...post, Likes: likesArray, liked: false };
-                  }
-               }));
-            });
+         const updatedPosts = await likePost(postId, api, listOfPosts);
+         setListOfPosts(updatedPosts);
       }
    };
 
    return (
       <div className="main home">
+         <div className="go-back">
+            <KeyboardBackspaceIcon 
+               sx={{ fontSize: 25 }} 
+               className="go-back-icon"
+               onClick={() => {
+                  navigate("/home");
+               }}
+            />
+         <div className="go-back-text">{username}</div>
+         </div>
+
          <div className="basic-info">
             <h2>{username}</h2>
             {joinTime && 
@@ -66,6 +56,7 @@ function Profile() {
                </div>
             }
          </div>
+         
          <div className="list-of-posts">
             {listOfPosts.map((value, key) => {
                return (
@@ -73,9 +64,7 @@ function Profile() {
                      className="post home-post"
                   >
                      <div className="header">
-                        <Link to={`/profile/${value.UserId}`} className="username">
-                           {value.username}
-                        </Link>
+                        <Link to={`/profile/${id}`} className="username">{username}</Link>
                         <div></div>
                      </div>
    
@@ -91,7 +80,7 @@ function Profile() {
                            <div 
                               className={value.liked ? "like-btn liked" : "like-btn"}
                               onClick={() => {
-                                 LikeAPost(value.id);
+                                 fetchLikePost(value.id);
                               }}
                            >
                               {value.liked 
