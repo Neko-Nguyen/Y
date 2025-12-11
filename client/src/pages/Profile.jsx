@@ -10,17 +10,20 @@ import { getBasicInfo } from "../api/User";
 
 function Profile() {
    let { id } = useParams();
-   const [username, setUsername] = useState("");
-   const [joinTime, setJoinTime] = useState("");
-   const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
+
+   const [username, setUsername] = useState("");
+   const [bio, setBio] = useState("");
+   const [joinTime, setJoinTime] = useState("");
+   const [listOfPosts, setListOfPosts] = useState([]);
 
    useEffect(() => {
       const fetchBasicInfo = async () => {
          const basicInfo = await getBasicInfo(api, id, authState);
          setUsername(basicInfo.username);
+         setBio(basicInfo.bio);
          setJoinTime(basicInfo.joinTime);
          setListOfPosts(basicInfo.listOfPosts);
       }
@@ -28,11 +31,15 @@ function Profile() {
       fetchBasicInfo();
    }, [api, id, authState]);
 
-   const fetchLikePost = async (postId) => {
+   async function fetchLikePost(postId) {
       if (authState.id > 0) {
          const updatedPosts = await likePost(postId, api, listOfPosts);
          setListOfPosts(updatedPosts);
       }
+   };
+
+   function navEditProfile() {
+      navigate(`/editprofile/${id}`);
    };
 
    return (
@@ -49,7 +56,15 @@ function Profile() {
          </div>
 
          <div className="basic-info">
-            <h2>{username}</h2>
+            <div className="edit-profile">
+               <h2>{username}</h2>
+               {authState.id == id &&
+                  <button className="submit-btn" onClick={navEditProfile}> 
+                     Edit Profile 
+                  </button>
+               }
+            </div>
+            <p>{bio}</p>
             {joinTime && 
                <div className="join-time">
                   {joinTime.substring(11, 16)} · {joinTime.substring(0, 10)}

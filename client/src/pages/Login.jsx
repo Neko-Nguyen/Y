@@ -12,7 +12,7 @@ function Login() {
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
-   const fetchLogin = async () => {
+   async function fetchLogin() {
       const userData = {username: username, password: password};
       const data = await login(api, userData);
       

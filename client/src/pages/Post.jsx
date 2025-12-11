@@ -30,21 +30,23 @@ function Post() {
       fetchCommentsByPostId();
    }, [api, id, setPostObject, setComments]);
 
-   const fetchAddComment = async () => {
-      const commentsData = await addComment(api, comments, 
-            { commentBody: newComment, PostId: id }
-         );
+   async function fetchAddComment() {
+      const newCommentData = {
+         commentBody: newComment,
+         PostId: id
+      };
+      const commentsData = await addComment(api, comments, newCommentData);
 
       setComments(commentsData);
       setNewComment("");
    };
 
-   const fetchDeleteComment = async (id) => {
+   async function fetchDeleteComment(id) {
       const newComments = await deleteComment(api, id, comments);
       setComments(newComments);
    };
 
-   const fetchDeletePost = async () => {
+   async function fetchDeletePost() {
       await deletePost(api, postObject.id, navigate);
    };
 

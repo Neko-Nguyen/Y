@@ -15,7 +15,7 @@ function Signin() {
       password: "",
    };
 
-   const fetchSignIn = async (data) => {
+   async function fetchSignIn(data) {
       await signin(api, data, navigate);
    };
 
