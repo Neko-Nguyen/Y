@@ -16,6 +16,7 @@
     "dotenv": "^17.2.3",
     "formik": "^2.4.6",
     "gsap": "^3.13.0",
+    "multer": "^2.0.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.1",
