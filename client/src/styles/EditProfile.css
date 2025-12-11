@@ -1,0 +1,7 @@
+/* input */
+.update-profile {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  margin: 25px;
+}

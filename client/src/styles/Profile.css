@@ -3,6 +3,10 @@
   border-bottom: 1px solid #b1b1b1;
 }
 
+.edit-profile {
+  display: flex;
+}
+
 .join-time {
   color: #777777;
   font-size: 0.8rem;

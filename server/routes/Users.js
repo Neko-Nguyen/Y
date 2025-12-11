@@ -1,7 +1,11 @@
 const express = require("express");
+
 const router = express.Router();
-const { Users, Posts, Likes } = require("../models");
 const bcrypt = require("bcryptjs");
+const multer = require('multer');
+
+const upload = multer({ dest: 'uploads/' });
+const { Users, Posts, Likes } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const { sign } = require("jsonwebtoken");
 
@@ -38,7 +42,7 @@ router.post("/login", async (req, res) => {
    })
 });
 
-router.get("/auth", validateToken, (req, res) => {
+router.get("/auth", validateToken, async (req, res) => {
    res.json(req.user);
 });
 
@@ -52,6 +56,16 @@ router.get("/basicinfo/:id", async (req, res) => {
       }]
    });
    res.json(basicInfo);
+});
+
+router.patch("/basicinfo/:id", upload.single('avatar'), validateToken, async (req, res) => {
+   Users.update({
+         username: req.body.username,
+         avatar: req.file,
+         bio: req.body.bio
+      }, { where: { id: req.params.id } }
+   );
+   res.json();
 });
 
 module.exports = router;
