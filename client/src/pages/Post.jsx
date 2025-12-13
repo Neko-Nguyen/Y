@@ -39,7 +39,7 @@ function Post() {
       fetchCommentsByPostId();
    }, [api, id, setPostObject, setComments, authState]);
 
-   async function fetchDeletePost() {
+   async function fetchDeletePost(id) {
       await deletePost(api, id, navigate);
    };
 
@@ -56,7 +56,7 @@ function Post() {
       setComments(newComments);
    };
 
-   function thisLikeAPost() {
+   function thisLikeAPost(id) {
       async function fetchLikePost() {
          const updatedPosts = await likePost(api, id, [postObject]);
          setPostObject(updatedPosts[0]);
@@ -82,14 +82,9 @@ function Post() {
             </div>
 
             <PostObject postInfo={{
-               id: Number(id),
-               userId: Number(postObject.UserId),
-               postText: postObject.postText,
-               createdAt: postObject.createdAt,
+               postObject: postObject,
                deletePostFunc: fetchDeletePost,
-               likePostFunc: thisLikeAPost,
-               liked: postObject.liked,
-               numOfLikes: postObject.Likes.length
+               likePostFunc: thisLikeAPost
             }}/>
          </div>
 
@@ -118,12 +113,8 @@ function Post() {
                return (
                   <div className="comment-container">
                      <CommentObject commentInfo={{
-                        id: Number(value.id),
-                        userId: Number(value.UserId),
-                        username: value.username,
-                        commentBody: value.commentBody,
-                        deleteCommentFunc: fetchDeleteComment,
-                        createdAt: value.createdAt
+                        commentObject: value,
+                        deleteCommentFunc: fetchDeleteComment
                      }}/>
                   </div>
                );

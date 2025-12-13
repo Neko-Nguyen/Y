@@ -1,46 +1,46 @@
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../helpers/AuthContext";
-import { ApiEndpointContext } from "../../helpers/ApiEndpointContext";
-import { getUsername } from "../../api/User";
 
-function PostObject({postInfo}) {
+const defaultPostInfo = {
+    postObject: {
+        id: 0,
+        UserId: 0,
+        username: "",
+        postText: "",
+        createdAt: "",   
+        liked: false,
+        Likes: []
+    },
+    deletePostFunc: () => {},
+    likePostFunc: () => {},
+};
+
+function PostObject({postInfo=defaultPostInfo}) {
     const { authState } = useContext(AuthContext);
-    const api = useContext(ApiEndpointContext);
+    const postObject = postInfo.postObject;
 
-    const [username, setUsername] = useState("");
-
-    useEffect(() => {
-        async function fetchUsernameById() {
-            const data = await getUsername(api, postInfo.userId);
-            setUsername(data);
-        }
-
-        fetchUsernameById();
-    }, [api, postInfo.userId, setUsername]);
-
-    function stop(e) {
-        e.stopPropagation();
-    };
+    function stop(e) { e.stopPropagation(); };
 
     function handleLike(e) {
-        postInfo.likePostFunc();
-        e.stopPropagation();
-    }
+        postInfo.likePostFunc(postObject.id);
+        console.log(postObject);
+        stop(e);
+    };
 
     return (
         <>
             <div className="header">
-                <Link to={`/profile/${postInfo.userId}`} className="username" onClick={stop}>
-                    {username}
+                <Link to={`/profile/${postObject.UserId}`} className="username" onClick={stop}>
+                    {postObject.username}
                 </Link>
 
-                {authState.username === username ? (
+                {authState.username === postObject.username ? (
                     <button 
                         className="delete-btn"
                         onClick={() => {
-                            postInfo.deletePostFunc(postInfo.id)
+                            postInfo.deletePostFunc(postObject.id)
                         }}
                     >✖</button>
                 ) : (
@@ -48,27 +48,27 @@ function PostObject({postInfo}) {
                 )}
             </div>
 
-            <div className="body"> {postInfo.postText} </div>
+            <div className="body"> {postObject.postText} </div>
 
             <div className="footer">
                 <div className="like-btn-container">
                     <div 
-                        className={postInfo.liked ? "like-btn liked" : "like-btn"}
+                        className={postObject.liked ? "like-btn liked" : "like-btn"}
                         onClick={handleLike}
                     >
-                        {postInfo.liked 
+                        {postObject.liked 
                             ? <Favorite sx={{ fontSize: 15 }}/>
                             : <FavoriteBorder sx={{ fontSize: 15 }}/>
                         }
                     </div>
 
-                    <label className={postInfo.liked ? "like-btn-label liked" : "like-btn-label"}> 
-                        {postInfo.numOfLikes} 
+                    <label className={postObject.liked ? "like-btn-label liked" : "like-btn-label"}> 
+                        {postObject.Likes.length} 
                     </label>
                 </div>
 
-                {postInfo.createdAt && <div className="time">
-                    {postInfo.createdAt.substring(11, 16)} · {postInfo.createdAt.substring(0, 10)}
+                {postObject.createdAt && <div className="time">
+                    {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
                 </div>}
             </div>
         </>

@@ -47,14 +47,9 @@ function Home() {
             return (
                <div className="post home-post" onClick={() => navPost(value.id)}>
                   <PostObject postInfo={{
-                     id: Number(value.id),
-                     userId: Number(value.UserId),
-                     postText: value.postText,
-                     createdAt: value.createdAt,
+                     postObject: value,
                      deletePostFunc: fetchDeletePost,
-                     likePostFunc: thisLikeAPost,
-                     liked: value.liked,
-                     numOfLikes: value.Likes.length
+                     likePostFunc: thisLikeAPost
                   }}/>
                </div>
             );

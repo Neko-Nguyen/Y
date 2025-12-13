@@ -2,21 +2,33 @@ import { Link } from 'react-router-dom'
 import { AuthContext } from '../../helpers/AuthContext';
 import { useContext } from 'react';
 
-function CommentObject({commentInfo}) {
+const defaultCommentObject = {
+    commentObject: {
+        id: 0,
+        UserId: 0,
+        username: "",
+        commentBody: "",
+        createdAt: ""
+    },
+    deleteCommentFunc: () => {},
+};
+
+function CommentObject({commentInfo=defaultCommentObject}) {
     const { authState } = useContext(AuthContext);
+    const commentObject = commentInfo.commentObject;
 
     return (
         <>
             <div className="header">
-                <Link to={`/profile/${commentInfo.userId}`} className="username">
-                    {commentInfo.username}
+                <Link to={`/profile/${commentObject.UserId}`} className="username">
+                    {commentObject.username}
                 </Link>
 
-                {authState.username === commentInfo.username ? (
+                {authState.username === commentObject.username ? (
                     <button 
                         className="delete-btn"
                         onClick={() => {
-                            commentInfo.deleteCommentFunc(commentInfo.id)
+                            commentInfo.deleteCommentFunc(commentObject.id)
                         }}
                     >✖</button>
                 ) : (
@@ -24,11 +36,13 @@ function CommentObject({commentInfo}) {
                 )}
             </div>
 
-            <div className="comment"> {commentInfo.commentBody} </div>
+            <div className="comment"> {commentObject.commentBody} </div>
 
-            {commentInfo.createdAt && <div className="time">
-                {commentInfo.createdAt.substring(11, 16)} · {commentInfo.createdAt.substring(0, 10)}
-            </div>}
+            <div className="footer">
+                {commentObject.createdAt && <div className="time">
+                    {commentObject.createdAt.substring(11, 16)} · {commentObject.createdAt.substring(0, 10)}
+                </div>}
+            </div>
         </>
     )
 }
