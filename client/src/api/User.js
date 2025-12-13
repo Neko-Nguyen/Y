@@ -75,6 +75,12 @@ export async function getBasicInfo(api, id, authState) {
     };
 };
 
+export async function getUsername(api, id) {
+    const response = await axios.get(`${api}/users/basicinfo/${id}`);
+    if (response.data === null) return "";
+    return response.data.username;
+};
+
 export async function updateBasicInfo(api, id, data, navigate) {
     await axios
         .patch(`${api}/users/basicinfo/${id}`, data, authHeader())

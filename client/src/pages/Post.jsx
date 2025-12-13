@@ -1,40 +1,50 @@
 import "../styles/Post.css";
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { deletePost, getPostById } from "../api/Post";
+import { deletePost, getPostById, likePost } from "../api/Post";
 import { addComment, deleteComment, getCommentsByPostId, } from "../api/Comment";
+import PostObject from "./object/PostObject";
+import CommentObject from "./object/CommentObject";
 
 function Post() {
    let { id } = useParams();
-   const [postObject, setPostObject] = useState({});
-   const [comments, setComments] = useState([]);
-   const [newComment, setNewComment] = useState("");
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
 
+   const [postObject, setPostObject] = useState({ 
+      Likes: [], UserId: 0, liked: false
+   });
+   const [comments, setComments] = useState([]);
+   const [newComment, setNewComment] = useState("");
+
    useEffect(() => {
-      const fetchPostById = async () => {
+      async function fetchPostAndUserById() {
          const data = await getPostById(api, id);
-         setPostObject(data);
+         const postData = {
+            ...data,
+            liked: data.Likes.find(x => x.UserId === authState.id) != null
+         }
+         setPostObject(postData);
       };
-      const fetchCommentsByPostId = async () => {         
+      async function fetchCommentsByPostId() {
          const data = await getCommentsByPostId(api, id);
          setComments(data);
       };
 
-      fetchPostById();
+      fetchPostAndUserById();
       fetchCommentsByPostId();
-   }, [api, id, setPostObject, setComments]);
+   }, [api, id, setPostObject, setComments, authState]);
+
+   async function fetchDeletePost() {
+      await deletePost(api, id, navigate);
+   };
 
    async function fetchAddComment() {
-      const newCommentData = {
-         commentBody: newComment,
-         PostId: id
-      };
+      const newCommentData = { commentBody: newComment, PostId: id };
       const commentsData = await addComment(api, comments, newCommentData);
 
       setComments(commentsData);
@@ -46,8 +56,15 @@ function Post() {
       setComments(newComments);
    };
 
-   async function fetchDeletePost() {
-      await deletePost(api, postObject.id, navigate);
+   function thisLikeAPost() {
+      async function fetchLikePost() {
+         const updatedPosts = await likePost(api, id, [postObject]);
+         setPostObject(updatedPosts[0]);
+      };
+
+      if (authState.id > 0) {
+         fetchLikePost();
+      }
    };
 
    return (
@@ -64,29 +81,19 @@ function Post() {
                <div className="go-back-text">Post</div>
             </div>
 
-            <div className="header">
-               <Link to={`/profile/${id}`} className="username">
-                  {postObject.username}
-               </Link>
+            <PostObject postInfo={{
+               id: Number(id),
+               userId: Number(postObject.UserId),
+               postText: postObject.postText,
+               createdAt: postObject.createdAt,
+               deletePostFunc: fetchDeletePost,
+               likePostFunc: thisLikeAPost,
+               liked: postObject.liked,
+               numOfLikes: postObject.Likes.length
+            }}/>
+         </div>
 
-               {authState.username === postObject.username ? (
-                  <button 
-                     className="delete-btn"
-                     onClick={fetchDeletePost}
-                  >✖</button>
-               ) : (
-                  <div></div>
-               )}
-            </div>
-
-            <div className="body"> {postObject.postText} </div>
-
-            {postObject.createdAt && (
-               <div className="single-post-time time">
-                  {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
-               </div>
-            )}
-            
+         <div className="post">
             <div className="create-comment-container">
                <textarea
                   autoComplete="off"
@@ -110,30 +117,14 @@ function Post() {
             {comments.map((value, key) => {
                return (
                   <div className="comment-container">
-                     <div className="header">
-                        <Link to={`/profile/${value.id}`} className="username">
-                           {value.username}
-                        </Link>
-
-                        {authState.username === value.username ? (
-                           <button 
-                              className="delete-btn"
-                              onClick={() => {
-                                 fetchDeleteComment(value.id)
-                              }}
-                           >✖</button>
-                        ) : (
-                           <div></div>
-                        )}
-                     </div>
-
-                     <div className="comment"> {value.commentBody} </div>
-
-                     {value.createdAt && 
-                        <div className="time">
-                           {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
-                        </div>  
-                     }
+                     <CommentObject commentInfo={{
+                        id: Number(value.id),
+                        userId: Number(value.UserId),
+                        username: value.username,
+                        commentBody: value.commentBody,
+                        deleteCommentFunc: fetchDeleteComment,
+                        createdAt: value.createdAt
+                     }}/>
                   </div>
                );
             })}

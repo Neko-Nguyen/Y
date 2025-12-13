@@ -22,12 +22,12 @@ export async function getHomePosts(api, userId) {
    return updatedPosts;
 };
 
-export async function likePost(postId, api, listOfPosts) {
+export async function likePost(api, postId, listOfPosts) {
    const response = await axios.post(`${api}/likes`, { PostId: postId }, authHeader());
    const data = response.data;
-
+   
    const updatedPosts = listOfPosts.map((post) => {
-      if (post.id !== postId) return post;
+      if (post.id !== postId) return post; 
 
       if (data.liked) {
          return { ...post, Likes: [...post.Likes, 0], liked: true };
