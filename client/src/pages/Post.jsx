@@ -56,14 +56,10 @@ function Post() {
       setComments(newComments);
    };
 
-   function thisLikeAPost(id) {
-      async function fetchLikePost() {
+   async function fetchLikePost(id) {
+      if (authState.id > 0) {
          const updatedPosts = await likePost(api, id, [postObject]);
          setPostObject(updatedPosts[0]);
-      };
-
-      if (authState.id > 0) {
-         fetchLikePost();
       }
    };
 
@@ -84,7 +80,7 @@ function Post() {
             <PostObject postInfo={{
                postObject: postObject,
                deletePostFunc: fetchDeletePost,
-               likePostFunc: thisLikeAPost
+               likePostFunc: fetchLikePost
             }}/>
          </div>
 

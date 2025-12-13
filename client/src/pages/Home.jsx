@@ -26,16 +26,12 @@ function Home() {
       await deletePost(api, id, navigate);
    };
 
-   function thisLikeAPost(postId) {
-      async function fetchLikePost() {
-         const updatedPosts = await likePost(api, postId, listOfPosts);
-         setListOfPosts(updatedPosts);
-      };
-
+   async function fetchLikePost(id) {
       if (authState.id > 0) {
-         fetchLikePost();
+         const updatedPosts = await likePost(api, id, listOfPosts);
+         setListOfPosts(updatedPosts);
       }
-   };
+   }
 
    function navPost(id) {
       navigate(`/post/${id}`);
@@ -49,7 +45,7 @@ function Home() {
                   <PostObject postInfo={{
                      postObject: value,
                      deletePostFunc: fetchDeletePost,
-                     likePostFunc: thisLikeAPost
+                     likePostFunc: fetchLikePost
                   }}/>
                </div>
             );

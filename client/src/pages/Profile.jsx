@@ -1,12 +1,12 @@
 import "../styles/Profile.css";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { useParams, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { likePost } from "../api/Post";
+import { deletePost, likePost } from "../api/Post";
 import { getBasicInfo } from "../api/User";
+import PostObject from "./object/PostObject";
 
 function Profile() {
    let { id } = useParams();
@@ -31,9 +31,13 @@ function Profile() {
       fetchBasicInfo();
    }, [api, id, authState]);
 
-   async function fetchLikePost(postId) {
+   async function fetchDeletePost(id) {
+      await deletePost(api, id, navigate);
+   };
+
+   async function fetchLikePost(id) {
       if (authState.id > 0) {
-         const updatedPosts = await likePost(postId, api, listOfPosts);
+         const updatedPosts = await likePost(api, id, listOfPosts);
          setListOfPosts(updatedPosts);
       }
    };
@@ -58,7 +62,7 @@ function Profile() {
          <div className="basic-info">
             <div className="edit-profile">
                <h2>{username}</h2>
-               {authState.id == id &&
+               {authState.id === Number(id) &&
                   <button className="submit-btn" onClick={navEditProfile}> 
                      Edit Profile 
                   </button>
@@ -78,44 +82,11 @@ function Profile() {
                   <div 
                      className="post home-post"
                   >
-                     <div className="header">
-                        <Link to={`/profile/${id}`} className="username">{username}</Link>
-                        <div></div>
-                     </div>
-   
-                     <div 
-                        className="body"
-                        onClick={() => {
-                           navigate(`/post/${value.id}`);
-                        }}
-                     >{value.postText}</div>
-   
-                     <div className="footer">
-                        <div className="like-btn-container">
-                           <div 
-                              className={value.liked ? "like-btn liked" : "like-btn"}
-                              onClick={() => {
-                                 fetchLikePost(value.id);
-                              }}
-                           >
-                              {value.liked 
-                                 ? <Favorite sx={{ fontSize: 15}}/>
-                                 : <FavoriteBorder sx={{ fontSize: 15}}/>
-                              }
-                           </div>
-                           <label 
-                              className={value.liked ? "like-btn-label liked" : "like-btn-label"}
-                           >
-                              {value.Likes.length}
-                           </label>
-                        </div>
-   
-                        {value.createdAt && 
-                           <div className="time">
-                              {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
-                           </div>
-                        }
-                     </div>
+                     <PostObject postInfo={{
+                        postObject: value,
+                        deletePostFunc: fetchDeletePost,
+                        likePostFunc: fetchLikePost
+                     }}/>
                   </div>
                );
             })}
