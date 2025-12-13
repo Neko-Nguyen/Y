@@ -12,7 +12,7 @@ function EditProfile() {
         username: "",
         bio: ""
     });
-    const { authState } = useContext(AuthContext);
+    const { authState, setAuthState } = useContext(AuthContext);
     const api = useContext(ApiEndpointContext);
     let navigate = useNavigate();
     
@@ -42,6 +42,10 @@ function EditProfile() {
 
         try {
             updateBasicInfo(api, id, formData, navigate);
+            setAuthState({
+                ...authState,
+                username: formData.username
+            });
         } catch (err) {
             console.error("Error: ", err);
         }

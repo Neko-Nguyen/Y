@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const multer = require('multer');
 
 const upload = multer({ dest: 'uploads/' });
-const { Users, Posts, Likes } = require("../models");
+const { Users, Posts, Comments, Likes } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const { sign } = require("jsonwebtoken");
 
@@ -65,6 +65,12 @@ router.patch("/basicinfo/:id", upload.single('avatar'), validateToken, async (re
          bio: req.body.bio
       }, { where: { id: req.params.id } }
    );
+   Posts.update({ username: req.body.username }, {
+      where: { UserId: req.params.id }
+   });
+   Comments.update({ username: req.body.username }, {
+      where: { UserId: req.params.id }
+   });
    res.json();
 });
 
