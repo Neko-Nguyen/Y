@@ -24,7 +24,7 @@ function App() {
     const fetchAuth = async () => {
       const data = await getAuth(api);
       setAuthState(data);
-    }
+    };
     
     fetchAuth().then(() => {
       setLoading(false);
