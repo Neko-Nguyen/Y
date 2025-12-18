@@ -36,6 +36,14 @@ body {
   margin-right: 1100px;
 }
 
+.block {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 15px;
+  height: 5px;
+  width: 150px;
+}
+
 /* nav bar above */
 .nav-bar-above {
   display: flex;
@@ -220,6 +228,19 @@ button.route {
 .like-btn-label {
   font-size: 0.9rem;
   margin-top: 6px;
+}
+
+/* button */
+.btn {
+  display: block;
+  margin: 10px 0;
+  margin-left: auto;
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  background: #222222;
+  color: #ececec;
+  width: 150px;
 }
 
 .time {
