@@ -24,9 +24,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Code counter output (if any)
-.code-counter/
-counter-results.json
+.VSCodeCounter
 
 # OS / backups
-FileHistory/
-*.bak
+.history
