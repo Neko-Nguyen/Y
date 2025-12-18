@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { validateToken } = require("../middlewares/AuthMiddleware");
-const Follows = require("../models/Follows");
+const { Follows, Users } = require("../models");
 
 router.post("/:followingId", validateToken, async (req, res) => {
    const followerId = req.user.id;
@@ -12,7 +12,12 @@ router.post("/:followingId", validateToken, async (req, res) => {
    }
 
    const follow = { followerId, followingId };
-   const found = await Follows.findOne({ follow });
+   const found = await Follows.findOne({ 
+      where: {
+         followerId: followerId,
+         followingId: followingId
+      }
+   });
 
    if (!found) {
       await Follows.create(follow);
@@ -31,11 +36,11 @@ router.post("/:followingId", validateToken, async (req, res) => {
 router.get("/followinfo/:id", async (req, res) => {
    const id = req.params.id;
 
-   const followers = Follows.findAll({
+   const followers = await Follows.findAll({
       where: { followingId: id },
       include: [{ model: Users, as: "Follower" }]
    });
-   const followings = Follows.findAll({
+   const followings = await Follows.findAll({
       where: { followerId: id },
       include: [{ model: Users, as: "Following" }]
    });
