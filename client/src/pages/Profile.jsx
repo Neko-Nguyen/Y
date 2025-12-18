@@ -31,10 +31,10 @@ function Profile() {
          setListOfPosts(basicInfo.listOfPosts);
       }
       async function fetchFollowInfo() {
-         const followInfo = await getFollowInfo(api, id);
-         setFollowInfo(followInfo);
-         const newFollowState = followInfo.followers.find(u => u.followerId === authState.id);
-         setFollowState(newFollowState);
+         const newFollowInfo = await getFollowInfo(api, id);
+         setFollowInfo(newFollowInfo);
+         const newFollowState = newFollowInfo.followers.find(u => u.followerId === authState.id);
+         setFollowState(Boolean(newFollowState));
       };
 
       fetchBasicInfo();
@@ -62,7 +62,7 @@ function Profile() {
                   navigate("/home");
                }}
             />
-         <div className="go-back-text">{username}</div>
+            <div className="go-back-text">{username}</div>
          </div>
 
          <div className="basic-info">
@@ -81,10 +81,10 @@ function Profile() {
             }
 
             <div className="follow-info-container">
-               <Link className="follow-info">
+               <Link to={`/followinfo/followings/${id}`} className="follow-info">
                   <span className="follow-number">{followInfo.followings.length}</span> Following
                </Link>
-               <Link className="follow-info">
+               <Link to={`/followinfo/followers/${id}`} className="follow-info">
                   <span className="follow-number">{followInfo.followers.length}</span> Followers
                </Link>
             </div>
