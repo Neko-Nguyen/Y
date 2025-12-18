@@ -13,6 +13,7 @@ app.use("/posts", require("./routes/Posts"));
 app.use("/comments", require("./routes/Comments"));
 app.use("/users", require("./routes/Users"));
 app.use("/likes", require("./routes/Likes"));
+app.use("/follows", require("./routes/Follows"));
 
 db.sequelize
    .sync()
