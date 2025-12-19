@@ -7,12 +7,18 @@ import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { likePost } from "../api/Post";
 import { getBasicInfo } from "../api/User";
+import { follow, getFollowInfo } from "../api/Follows";
 
 function Profile() {
    let { id } = useParams();
    const [username, setUsername] = useState("");
    const [joinTime, setJoinTime] = useState("");
    const [listOfPosts, setListOfPosts] = useState([]);
+   const [followInfo, setFollowInfo] = useState({
+      followers: [],
+      followings: [] 
+   });
+   const [followState, setFollowState] = useState(false);
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
@@ -24,8 +30,15 @@ function Profile() {
          setJoinTime(basicInfo.joinTime);
          setListOfPosts(basicInfo.listOfPosts);
       }
+      async function fetchFollowInfo() {
+         const newFollowInfo = await getFollowInfo(api, id);
+         setFollowInfo(newFollowInfo);
+         const newFollowState = newFollowInfo.followers.find(u => u.followerId === authState.id);
+         setFollowState(Boolean(newFollowState));
+      };
 
       fetchBasicInfo();
+      fetchFollowInfo();
    }, [api, id, authState]);
 
    const fetchLikePost = async (postId) => {
@@ -33,6 +46,10 @@ function Profile() {
          const updatedPosts = await likePost(postId, api, listOfPosts);
          setListOfPosts(updatedPosts);
       }
+   };
+
+   async function fetchFollow() {
+      await follow(api, id, setFollowState);
    };
 
    return (
@@ -45,16 +62,32 @@ function Profile() {
                   navigate("/home");
                }}
             />
-         <div className="go-back-text">{username}</div>
+            <div className="go-back-text">{username}</div>
          </div>
 
          <div className="basic-info">
             <h2>{username}</h2>
+
+            {authState.id !== Number(id)
+            ? <button onClick={fetchFollow} className="btn">
+                  {followState ? "Followed" : "Follow"}
+               </button>
+            : <div className="block"></div>}
+
             {joinTime && 
                <div className="join-time">
                   {joinTime.substring(11, 16)} · {joinTime.substring(0, 10)}
                </div>
             }
+
+            <div className="follow-info-container">
+               <Link to={`/followinfo/followings/${id}`} className="follow-info">
+                  <span className="follow-number">{followInfo.followings.length}</span> Following
+               </Link>
+               <Link to={`/followinfo/followers/${id}`} className="follow-info">
+                  <span className="follow-number">{followInfo.followers.length}</span> Followers
+               </Link>
+            </div>
          </div>
          
          <div className="list-of-posts">

@@ -13,6 +13,7 @@ import Navbar from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
 import { getAuth } from "./api/User";
+import FollowInfo from "./pages/FollowInfo";
 
 function App() {
   const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
@@ -49,6 +50,7 @@ function App() {
             <Route path="/login" exact element={<Login/>}/>
             <Route path="/signin" exact element={<Signin/>}/>
             <Route path="/profile/:id" exact element={<Profile/>}/>
+            <Route path="/followinfo/:info/:id" exact element={<FollowInfo/>}/>
             <Route path="*" exact element={<PageNotFound/>}/>
           </Routes>
         </Router>

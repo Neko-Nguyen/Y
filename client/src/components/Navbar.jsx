@@ -30,7 +30,7 @@ function Navbar({ authState, setAuthState }) {
                     <HomeIcon sx={{ fontSize: 35}} className="route-icon"/>
                     <div className="route">Home</div>
                 </Link>
-                <Link to="/signin" className="route-container">
+                <Link to="/login" className="route-container">
                     <LogoutIcon sx={{ fontSize: 35}} className="route-icon"/>
                     <div className="route" onClick={() => { setAuthState(logout()) }}>Log out</div>
                 </Link>
