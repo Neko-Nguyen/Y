@@ -73,3 +73,8 @@ export async function getBasicInfo(api, id, authState) {
         listOfPosts: updatedPosts
     };
 };
+
+export async function getUserByKey(api, key) {
+    const response = await axios.get(`${api}/users/search/${key}`);
+    return response.data;  
+};
