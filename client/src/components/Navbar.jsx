@@ -3,6 +3,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
+import SearchIcon from "@mui/icons-material/Search";
 import { logout } from "../api/User";
 
 function Navbar({ authState, setAuthState }) {
@@ -27,11 +28,15 @@ function Navbar({ authState, setAuthState }) {
             ) : (
             <>
                 <Link to="/home" className="route-container">
-                    <HomeIcon sx={{ fontSize: 35}} className="route-icon"/>
+                    <HomeIcon sx={{ fontSize: 35 }} className="route-icon"/>
                     <div className="route">Home</div>
                 </Link>
+                <Link to="/explore" className="route-container">
+                    <SearchIcon sx={{ fontSize: 35 }} className="route-icon"/>
+                    <div className="route">Explore</div>
+                </Link>
                 <Link to="/login" className="route-container">
-                    <LogoutIcon sx={{ fontSize: 35}} className="route-icon"/>
+                    <LogoutIcon sx={{ fontSize: 35 }} className="route-icon"/>
                     <div className="route" onClick={() => { setAuthState(logout()) }}>Log out</div>
                 </Link>
                 <Link to="/createpost" className="route-post">Post</Link>

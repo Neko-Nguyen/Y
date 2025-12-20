@@ -8,6 +8,7 @@ import Post from "./pages/Post";
 import Login from "./pages/Login";
 import Signin from "./pages/Signin";
 import Profile from "./pages/Profile";
+import Explore from "./pages/Explore";
 import PageNotFound from "./pages/PageNotFound";
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
@@ -51,6 +52,7 @@ function App() {
             <Route path="/signin" exact element={<Signin/>}/>
             <Route path="/profile/:id" exact element={<Profile/>}/>
             <Route path="/followinfo/:info/:id" exact element={<FollowInfo/>}/>
+            <Route path="/explore" exact element={<Explore/>}/>
             <Route path="*" exact element={<PageNotFound/>}/>
           </Routes>
         </Router>
