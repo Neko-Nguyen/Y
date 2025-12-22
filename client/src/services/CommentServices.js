@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authHeader } from "./User";
+import { authHeader } from "./UserServices";
 
 export async function getCommentsByPostId(api, id) {
    const response = await axios.get(`${api}/comments/${id}`);

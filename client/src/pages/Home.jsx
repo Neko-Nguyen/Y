@@ -1,10 +1,10 @@
 import "../styles/Home.css";
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { getHomePosts, likePost } from "../api/Post";
+import { deletePost, getHomePosts, likePost } from "../services/PostServices";
+import PostObject from "./object/PostObject";
 
 function Home() {
    const [listOfPosts, setListOfPosts] = useState([]);
@@ -22,70 +22,32 @@ function Home() {
       fetchData();
    }, [api, authState.id, authState.status, navigate, setListOfPosts]);
 
-   function thisLikeAPost(postId) {
-      async function fetchLikePost() {
-         const updatedPosts = await likePost(postId, api, listOfPosts);
-         setListOfPosts(updatedPosts);
-      };
+   async function fetchDeletePost(id) {
+      await deletePost(api, id, navigate);
+   };
 
+   async function fetchLikePost(id) {
       if (authState.id > 0) {
-         fetchLikePost();
+         const updatedPosts = await likePost(api, id, listOfPosts);
+         setListOfPosts(updatedPosts);
       }
+   }
+
+   function navPost(id) {
+      navigate(`/post/${id}`);
    };
 
    return (
       <div className="main home list-of-posts">
          {listOfPosts.map((value, key) => {
             return (
-               <div 
-                  className="post home-post"
-                  onClick={() => {
-                     navigate(`/post/${value.id}`);
-                  }}
-               >
-                  <div className="header">
-                     <Link 
-                        to={`/profile/${value.UserId}`} 
-                        className="username"
-                        onClick={(e) => {
-                           e.stopPropagation();
-                        }}
-                     >
-                        {value.username}
-                     </Link>
-                     
-                     <div></div>
-                  </div>
-
-                  <div className="body">{value.postText}</div>
-
-                  <div className="footer">
-                     <div className="like-btn-container">
-                        <div 
-                           className={value.liked ? "like-btn liked" : "like-btn"}
-                           onClick={(e) => {
-                              thisLikeAPost(value.id);
-                              e.stopPropagation();
-                           }}
-                        >
-                           {value.liked 
-                              ? <Favorite sx={{ fontSize: 15 }}/>
-                              : <FavoriteBorder sx={{ fontSize: 15 }}/>
-                           }
-                        </div>
-                        <label 
-                           className={value.liked ? "like-btn-label liked" : "like-btn-label"}
-                        >
-                           {value.Likes.length}
-                        </label>
-                     </div>
-
-                     {value.createdAt && 
-                        <div className="time">
-                           {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
-                        </div>
-                     }
-                  </div>
+               <div className="post home-post" onClick={() => navPost(value.id)}>
+                  <PostObject postInfo={{
+                     postObject: value,
+                     isDirectPost: false,
+                     deletePostFunc: fetchDeletePost,
+                     likePostFunc: fetchLikePost
+                  }}/>
                </div>
             );
          })}

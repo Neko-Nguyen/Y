@@ -2,10 +2,14 @@ const express = require("express");
 
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const multer = require('multer');
+const multer = require("multer");
 
-const upload = multer({ dest: 'uploads/' });
-const { Users, Posts, Likes } = require("../models");
+const upload = multer({ 
+   storage: multer.diskStorage({
+      destination: "./data/uploads/"
+   })
+});
+const { Users, Posts, Comments, Likes } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const { sign } = require("jsonwebtoken");
 
@@ -58,14 +62,22 @@ router.get("/basicinfo/:id", async (req, res) => {
    res.json(basicInfo);
 });
 
-router.patch("/basicinfo/:id", upload.single('avatar'), validateToken, async (req, res) => {
-   Users.update({
+router.patch("/basicinfo/:id", validateToken, upload.single('avatar'), async (req, res) => {
+   const filename = req.file === undefined ? null : req.file.filename;
+
+   await Users.update({
          username: req.body.username,
-         avatar: req.file,
+         avatar: filename,
          bio: req.body.bio
       }, { where: { id: req.params.id } }
    );
-   res.json();
+   await Posts.update({ username: req.body.username }, {
+      where: { UserId: req.params.id }
+   });
+   await Comments.update({ username: req.body.username }, {
+      where: { UserId: req.params.id }
+   });
+   res.json("success");
 });
 
 module.exports = router;

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { signin } from "../api/User";
+import { signin } from "../services/UserServices";
 
 function Signin() {
    let navigate = useNavigate();

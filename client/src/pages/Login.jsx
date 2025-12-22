@@ -3,7 +3,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { login } from "../api/User";
+import { login } from "../services/UserServices";
 
 function Login() {
    const [username, setUsername] = useState("");

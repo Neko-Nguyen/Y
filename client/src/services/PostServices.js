@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authHeader } from "./User";
+import { authHeader } from "./UserServices";
 
 export async function createPost(api, data, navigate) {
    await axios.post(`${api}/posts`, data, authHeader());
@@ -9,7 +9,7 @@ export async function createPost(api, data, navigate) {
 export async function deletePost(api, postId, navigate) {
    await axios.delete(`${api}/posts/${postId}`, authHeader());
    navigate("/home");
-}
+};
 
 export async function getHomePosts(api, userId) {
    const response = await axios.get(`${api}/posts`);
@@ -22,12 +22,12 @@ export async function getHomePosts(api, userId) {
    return updatedPosts;
 };
 
-export async function likePost(postId, api, listOfPosts) {
+export async function likePost(api, postId, listOfPosts) {
    const response = await axios.post(`${api}/likes`, { PostId: postId }, authHeader());
    const data = response.data;
-
+   
    const updatedPosts = listOfPosts.map((post) => {
-      if (post.id !== postId) return post;
+      if (post.id !== postId) return post; 
 
       if (data.liked) {
          return { ...post, Likes: [...post.Likes, 0], liked: true };
