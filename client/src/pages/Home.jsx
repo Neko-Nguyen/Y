@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { deletePost, getHomePosts, likePost } from "../api/Post";
+import { deletePost, getHomePosts, likePost } from "../services/PostServices";
 import PostObject from "./object/PostObject";
 
 function Home() {
@@ -44,6 +44,7 @@ function Home() {
                <div className="post home-post" onClick={() => navPost(value.id)}>
                   <PostObject postInfo={{
                      postObject: value,
+                     isDirectPost: false,
                      deletePostFunc: fetchDeletePost,
                      likePostFunc: fetchLikePost
                   }}/>

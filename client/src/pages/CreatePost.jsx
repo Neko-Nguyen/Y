@@ -3,7 +3,7 @@ import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { createPost } from "../api/Post";
+import { createPost } from "../services/PostServices";
 
 function CreatePost() {
    const [formData, setFormData] = useState({
@@ -64,6 +64,7 @@ function CreatePost() {
                type="file"
                name="file"
                onChange={handleChange}
+               accept="image/*"
             />
             <label className="input-label">Upload Images or Videos</label>
 

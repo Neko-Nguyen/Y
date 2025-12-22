@@ -4,8 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { deletePost, getPostById, likePost } from "../api/Post";
-import { addComment, deleteComment, getCommentsByPostId, } from "../api/Comment";
+import { deletePost, getPostById, likePost } from "../services/PostServices";
+import { addComment, deleteComment, getCommentsByPostId, } from "../services/CommentServices";
 import PostObject from "./object/PostObject";
 import CommentObject from "./object/CommentObject";
 
@@ -79,6 +79,7 @@ function Post() {
 
             <PostObject postInfo={{
                postObject: postObject,
+               isDirectPost: true,
                deletePostFunc: fetchDeletePost,
                likePostFunc: fetchLikePost
             }}/>

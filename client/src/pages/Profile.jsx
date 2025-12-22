@@ -4,8 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { deletePost, likePost } from "../api/Post";
-import { getBasicInfo } from "../api/User";
+import { deletePost, likePost } from "../services/PostServices";
+import { getBasicInfo } from "../services/UserServices";
 import PostObject from "./object/PostObject";
 
 function Profile() {
@@ -84,6 +84,7 @@ function Profile() {
                   >
                      <PostObject postInfo={{
                         postObject: value,
+                        isDirectPost: false,
                         deletePostFunc: fetchDeletePost,
                         likePostFunc: fetchLikePost
                      }}/>
