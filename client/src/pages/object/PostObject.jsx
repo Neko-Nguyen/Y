@@ -13,6 +13,7 @@ const defaultPostInfo = {
         liked: false,
         Likes: []
     },
+    isDirectPost: false,
     deletePostFunc: () => {},
     likePostFunc: () => {},
 };
@@ -25,7 +26,11 @@ function PostObject({postInfo=defaultPostInfo}) {
 
     function handleLike(e) {
         postInfo.likePostFunc(postObject.id);
-        console.log(postObject);
+        stop(e);
+    };
+
+    function handleDelete(e) {
+        postInfo.deletePostFunc(postObject.id);
         stop(e);
     };
 
@@ -36,13 +41,8 @@ function PostObject({postInfo=defaultPostInfo}) {
                     {postObject.username}
                 </Link>
 
-                {authState.username === postObject.username ? (
-                    <button 
-                        className="delete-btn"
-                        onClick={() => {
-                            postInfo.deletePostFunc(postObject.id)
-                        }}
-                    >✖</button>
+                {postInfo.isDirectPost && authState.username === postObject.username ? (
+                    <button className="delete-btn" onClick={handleDelete}>✖</button>
                 ) : (
                     <div></div>
                 )}

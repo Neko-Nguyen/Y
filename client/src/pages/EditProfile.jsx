@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBasicInfo, updateBasicInfo } from "../api/User";
+import { getBasicInfo, updateBasicInfo } from "../services/UserServices";
 import { AuthContext } from "../helpers/AuthContext";
 
 function EditProfile() {
@@ -30,6 +30,12 @@ function EditProfile() {
         fetchData();
     }, [api, id, authState, setFormData]);
 
+    function handleFileChange(e) {
+        setFormData({
+            avatar: e.target.files[0]
+        });
+    };
+
     function handleChange(e) {
         setFormData({
             ...formData,
@@ -52,7 +58,7 @@ function EditProfile() {
     };
 
     return (
-        <div class="main home">
+        <div className="main home">
             <form 
                 className="input-box update-profile"
                 onSubmit={handleSubmit}
@@ -60,7 +66,8 @@ function EditProfile() {
                 <input
                     type="file"
                     name="avatar"
-                    onChange={handleChange}
+                    onChange={handleFileChange}
+                    accept="image/*"
                     className="input avatar"
                 />
                 <label className="input-label"> Profile picture </label>
