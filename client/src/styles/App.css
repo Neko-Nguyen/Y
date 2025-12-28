@@ -172,6 +172,19 @@ button.route {
   color: #00612f;
 }
 
+.user-info {
+  display: flex;
+  align-items: end;
+}
+
+.post-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
 .username {
   text-decoration: none;
   color: #111111;
@@ -185,7 +198,7 @@ button.route {
 
 .body {
   text-align: start;
-  padding: 10px 0;
+  padding: 10px 35px;
 }
 
 /* footer */
