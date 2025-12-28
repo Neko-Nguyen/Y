@@ -2,12 +2,14 @@ import { FavoriteBorder, Favorite } from "@mui/icons-material";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../helpers/AuthContext";
+import { ApiEndpointContext } from "../../helpers/ApiEndpointContext";
 
 const defaultPostInfo = {
     postObject: {
         id: 0,
         UserId: 0,
         username: "",
+        avatar: "",
         postText: "",
         createdAt: "",   
         liked: false,
@@ -21,6 +23,7 @@ const defaultPostInfo = {
 function PostObject({postInfo=defaultPostInfo}) {
     const { authState } = useContext(AuthContext);
     const postObject = postInfo.postObject;
+    const api = useContext(ApiEndpointContext);
 
     function stop(e) { e.stopPropagation(); };
 
@@ -37,15 +40,20 @@ function PostObject({postInfo=defaultPostInfo}) {
     return (
         <>
             <div className="header">
-                <Link to={`/profile/${postObject.UserId}`} className="username" onClick={stop}>
-                    {postObject.username}
-                </Link>
+                <div className="user-info">
+                    {postObject.avatar
+                        ? <img className="post-avatar" src={`${api}/uploads/${postObject.avatar}`} alt="avatar"/>
+                        : <img className="post-avatar" src="/default-avatar.png" alt="avatar"/>
+                    }
+                    <Link to={`/profile/${postObject.UserId}`} className="username" onClick={stop}>
+                        {postObject.username}
+                    </Link>
+                </div>
 
-                {postInfo.isDirectPost && authState.username === postObject.username ? (
-                    <button className="delete-btn" onClick={handleDelete}>✖</button>
-                ) : (
-                    <div></div>
-                )}
+                {postInfo.isDirectPost && authState.username === postObject.username 
+                    ? <button className="delete-btn" onClick={handleDelete}>✖</button>
+                    : <div></div>
+                }
             </div>
 
             <div className="body"> {postObject.postText} </div>

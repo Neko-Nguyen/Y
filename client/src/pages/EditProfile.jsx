@@ -32,6 +32,7 @@ function EditProfile() {
 
     function handleFileChange(e) {
         setFormData({
+            ...formData,
             avatar: e.target.files[0]
         });
     };

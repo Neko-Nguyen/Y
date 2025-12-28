@@ -15,6 +15,7 @@ function Profile() {
    let navigate = useNavigate();
 
    const [username, setUsername] = useState("");
+   const [avatar, setAvatar] = useState("");
    const [bio, setBio] = useState("");
    const [joinTime, setJoinTime] = useState("");
    const [listOfPosts, setListOfPosts] = useState([]);
@@ -23,6 +24,7 @@ function Profile() {
       const fetchBasicInfo = async () => {
          const basicInfo = await getBasicInfo(api, id, authState);
          setUsername(basicInfo.username);
+         setAvatar(basicInfo.avatar);
          setBio(basicInfo.bio);
          setJoinTime(basicInfo.joinTime);
          setListOfPosts(basicInfo.listOfPosts);
@@ -46,6 +48,10 @@ function Profile() {
       navigate(`/editprofile/${id}`);
    };
 
+   function navPost(id) {
+      navigate(`/post/${id}`);
+   };
+
    return (
       <div className="main home">
          <div className="go-back">
@@ -56,10 +62,14 @@ function Profile() {
                   navigate("/home");
                }}
             />
-         <div className="go-back-text">{username}</div>
+            <div className="go-back-text">{username}</div>
          </div>
 
          <div className="basic-info">
+            {avatar 
+               ? <img className="profile-avatar" src={`${api}/uploads/${avatar}`} alt="avatar"/>
+               : <img className="profile-avatar" src="/default-avatar.png" alt="avatar"/>
+            }
             <div className="edit-profile">
                <h2>{username}</h2>
                {authState.id === Number(id) &&
@@ -79,9 +89,7 @@ function Profile() {
          <div className="list-of-posts">
             {listOfPosts.map((value, key) => {
                return (
-                  <div 
-                     className="post home-post"
-                  >
+                  <div className="post home-post" onClick={() => navPost(value.id)}>
                      <PostObject postInfo={{
                         postObject: value,
                         isDirectPost: false,
