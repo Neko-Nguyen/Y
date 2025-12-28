@@ -69,6 +69,7 @@ export async function getBasicInfo(api, id, authState) {
 
     return {
         username: data.username,
+        avatar: data.avatar,
         bio: data.bio,
         joinTime: data.createdAt,
         listOfPosts: updatedPosts
@@ -82,9 +83,11 @@ export async function getUsername(api, id) {
 };
 
 export async function updateBasicInfo(api, id, data, navigate) {
-    await axios
-        .patch(`${api}/users/basicinfo/${id}`, authHeader(), data)
-        .then(() => {
-            navigate(`/profile/${id}`);
-        });
+    await axios.patch(`${api}/users/basicinfo/${id}`, data, {
+        headers: {
+            accessToken: localStorage.getItem(storage),
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    navigate(`/profile/${id}`);
 };
