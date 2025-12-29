@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import "../styles/Explore.css";
 import SearchIcon from '@mui/icons-material/Search';
-import { getUserByKey } from "../api/User";
+import { getUserByKey } from "../services/UserServices";
+import { getPostByKey } from "../services/PostServices";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { getPostByKey } from "../api/Post";
 
 function Explore() {
    const [userResults, setUserResults] = useState([]);

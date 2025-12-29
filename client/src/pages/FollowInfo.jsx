@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { getFollowInfo } from "../api/Follows";
-import ListOfUsers from "../components/ListOfUsers";
+import { getFollowInfo } from "../services/FollowServices";
+import ListOfUsers from "./object/ListOfUsers";
 
 function FollowInfo() {
    let { info, id } = useParams();

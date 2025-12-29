@@ -2,12 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 const { Op } = require("sequelize");
-const { Users, Posts, Likes } = require("../models");
+const { Users, Posts, Comments, Likes } = require("../models");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
 
 const upload = multer({ dest: 'uploads/' });
-const { Users, Posts, Comments, Likes } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 const { sign } = require("jsonwebtoken");
 

@@ -1,14 +1,14 @@
 import "../styles/Profile.css";
+import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { deletePost, likePost } from "../services/PostServices";
-import { follow, getFollowInfo } from "../services/Follows";
+import { follow, getFollowInfo } from "../services/FollowServices";
 import { getBasicInfo } from "../services/UserServices";
 import PostObject from "./object/PostObject";
-import { getBasicInfo } from "../api/User";
 
 function Profile() {
    let { id } = useParams();
