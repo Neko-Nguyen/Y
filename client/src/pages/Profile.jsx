@@ -1,32 +1,38 @@
 import "../styles/Profile.css";
+import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
-import { FavoriteBorder, Favorite } from "@mui/icons-material";
+import { useParams, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { likePost } from "../api/Post";
-import { getBasicInfo } from "../api/User";
-import { follow, getFollowInfo } from "../api/Follows";
+import { deletePost, likePost } from "../services/PostServices";
+import { follow, getFollowInfo } from "../services/FollowServices";
+import { getBasicInfo } from "../services/UserServices";
+import PostObject from "./object/PostObject";
 
 function Profile() {
    let { id } = useParams();
+   const { authState } = useContext(AuthContext);
+   const api = useContext(ApiEndpointContext);
+   let navigate = useNavigate();
+   
    const [username, setUsername] = useState("");
-   const [joinTime, setJoinTime] = useState("");
-   const [listOfPosts, setListOfPosts] = useState([]);
    const [followInfo, setFollowInfo] = useState({
       followers: [],
       followings: [] 
    });
    const [followState, setFollowState] = useState(false);
-   const { authState } = useContext(AuthContext);
-   const api = useContext(ApiEndpointContext);
-   let navigate = useNavigate();
+   const [avatar, setAvatar] = useState("");
+   const [bio, setBio] = useState("");
+   const [joinTime, setJoinTime] = useState("");
+   const [listOfPosts, setListOfPosts] = useState([]);
 
    useEffect(() => {
       const fetchBasicInfo = async () => {
          const basicInfo = await getBasicInfo(api, id, authState);
          setUsername(basicInfo.username);
+         setAvatar(basicInfo.avatar);
+         setBio(basicInfo.bio);
          setJoinTime(basicInfo.joinTime);
          setListOfPosts(basicInfo.listOfPosts);
       }
@@ -41,15 +47,27 @@ function Profile() {
       fetchFollowInfo();
    }, [api, id, authState]);
 
-   const fetchLikePost = async (postId) => {
+   async function fetchDeletePost(id) {
+      await deletePost(api, id, navigate);
+   };
+
+   async function fetchLikePost(id) {
       if (authState.id > 0) {
-         const updatedPosts = await likePost(postId, api, listOfPosts);
+         const updatedPosts = await likePost(api, id, listOfPosts);
          setListOfPosts(updatedPosts);
       }
    };
 
    async function fetchFollow() {
       await follow(api, id, setFollowState);
+   };
+
+   function navEditProfile() {
+      navigate(`/editprofile/${id}`);
+   };
+
+   function navPost(id) {
+      navigate(`/post/${id}`);
    };
 
    return (
@@ -66,13 +84,23 @@ function Profile() {
          </div>
 
          <div className="basic-info">
-            <h2>{username}</h2>
-
-            {authState.id !== Number(id)
-            ? <button onClick={fetchFollow} className="btn">
-                  {followState ? "Followed" : "Follow"}
-               </button>
-            : <div className="block"></div>}
+            {avatar 
+               ? <img className="profile-avatar" src={`${api}/uploads/${avatar}`} alt="avatar"/>
+               : <img className="profile-avatar" src="/default-avatar.png" alt="avatar"/>
+            }
+            <div className="edit-profile">
+               <h2>{username}</h2>
+               {authState.id === Number(id)
+                  ? <button className="submit-btn" onClick={navEditProfile}> 
+                        Edit Profile 
+                     </button>
+                  : <button onClick={fetchFollow} className="btn">
+                        {followState ? "Followed" : "Follow"}
+                     </button>
+               }
+            </div>
+            
+            <p>{bio}</p>
 
             {joinTime && 
                <div className="join-time">
@@ -93,47 +121,13 @@ function Profile() {
          <div className="list-of-posts">
             {listOfPosts.map((value, key) => {
                return (
-                  <div 
-                     className="post home-post"
-                  >
-                     <div className="header">
-                        <Link to={`/profile/${id}`} className="username">{username}</Link>
-                        <div></div>
-                     </div>
-   
-                     <div 
-                        className="body"
-                        onClick={() => {
-                           navigate(`/post/${value.id}`);
-                        }}
-                     >{value.postText}</div>
-   
-                     <div className="footer">
-                        <div className="like-btn-container">
-                           <div 
-                              className={value.liked ? "like-btn liked" : "like-btn"}
-                              onClick={() => {
-                                 fetchLikePost(value.id);
-                              }}
-                           >
-                              {value.liked 
-                                 ? <Favorite sx={{ fontSize: 15}}/>
-                                 : <FavoriteBorder sx={{ fontSize: 15}}/>
-                              }
-                           </div>
-                           <label 
-                              className={value.liked ? "like-btn-label liked" : "like-btn-label"}
-                           >
-                              {value.Likes.length}
-                           </label>
-                        </div>
-   
-                        {value.createdAt && 
-                           <div className="time">
-                              {value.createdAt.substring(11, 16)} · {value.createdAt.substring(0, 10)}
-                           </div>
-                        }
-                     </div>
+                  <div className="post home-post" onClick={() => navPost(value.id)}>
+                     <PostObject postInfo={{
+                        postObject: value,
+                        isDirectPost: false,
+                        deletePostFunc: fetchDeletePost,
+                        likePostFunc: fetchLikePost
+                     }}/>
                   </div>
                );
             })}

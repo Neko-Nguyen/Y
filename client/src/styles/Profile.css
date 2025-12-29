@@ -1,6 +1,19 @@
+.profile-avatar {
+  display: flex;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
 .basic-info {
   padding: 0 20px 10px 20px;
   border-bottom: 1px solid #b1b1b1;
+}
+
+.edit-profile {
+  display: flex;
 }
 
 .join-time {

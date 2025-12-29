@@ -1,13 +1,15 @@
 import "../styles/CreatePost.css";
-import { useEffect, useContext } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { createPost } from "../api/Post";
+import { createPost } from "../services/PostServices";
 
 function CreatePost() {
+   const [formData, setFormData] = useState({
+      postText: "",
+      file: {}
+   });
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
@@ -15,44 +17,59 @@ function CreatePost() {
    useEffect(() => {
       if (!authState.status) navigate("/login");
    }, [authState, navigate]);
-   
-   const initialValues = {
-      postText: ""
+
+   function handleChange(e) {
+      setFormData({
+         ...formData,
+         [e.target.name]: e.target.value
+      });
    };
 
-   const fetchCreatePost = async (data) => {
-      await createPost(api, data, navigate);
-   };
+   function handleInputBox(e) {
+      e.target.style.height = "auto";
+      e.target.style.height = e.target.scrollHeight + "px";
+   }
 
-   const validationSchema = Yup.object().shape({
-      postText: Yup.string().required("You need to add some description!")
-   });
+   async function fetchCreatePost(e) {
+      e.preventDefault();
+
+      try {
+         createPost(api, formData, navigate);
+      } catch (err) {
+         console.error("Error: ", err);
+      }
+   };
 
    return (
       <div className="main home">
-         <Formik 
-            initialValues={initialValues} 
-            onSubmit={fetchCreatePost} 
-            validationSchema={validationSchema} 
+         <form 
+            className="input-box"
+            method="post"
+            enctype="multipart/form-data"
+            onSubmit={fetchCreatePost}
          >
-            <Form className="create-post">
-               <Field 
-                  autoComplete="off"
-                  name="postText"
-                  className="input"
-                  placeholder="Hating Silksong is a such a bad rage bait..."
-                  component="textarea"
-                  onInput={(event) => {
-                     event.target.style.height = "auto";
-                     event.target.style.height = event.target.scrollHeight + "px";
-                  }}
-               />
-               <ErrorMessage name="postText" component="span"/>
-               <label className="create-post-label">Description</label>
+            <input
+               type="text"
+               autoComplete="off"
+               name="postText"
+               className="input"
+               placeholder="What is in your mind right now..."
+               component="textarea"
+               onChange={handleChange}
+               onInput={handleInputBox}
+            />
+            <label className="input-label">Description</label>
 
-               <button type="submit" className="submit-btn"> Create Post </button>
-            </Form>
-         </Formik>
+            <input 
+               type="file"
+               name="file"
+               onChange={handleChange}
+               accept="image/*"
+            />
+            <label className="input-label">Upload Images or Videos</label>
+
+            <button type="submit" className="submit-btn"> Create Post </button>
+         </form>
       </div>
   )
 }

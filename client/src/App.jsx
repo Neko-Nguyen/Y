@@ -9,11 +9,12 @@ import Login from "./pages/Login";
 import Signin from "./pages/Signin";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
+import EditProfile from "./pages/EditProfile";
 import PageNotFound from "./pages/PageNotFound";
-import Navbar from "./components/Navbar";
+import Navbar from "./pages/object/Navbar";
 import { AuthContext } from "./helpers/AuthContext";
 import { ApiEndpointContext } from "./helpers/ApiEndpointContext";
-import { getAuth } from "./api/User";
+import { getAuth } from "./services/UserServices";
 import FollowInfo from "./pages/FollowInfo";
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
     const fetchAuth = async () => {
       const data = await getAuth(api);
       setAuthState(data);
-    }
+    };
     
     fetchAuth().then(() => {
       setLoading(false);
@@ -53,6 +54,7 @@ function App() {
             <Route path="/profile/:id" exact element={<Profile/>}/>
             <Route path="/followinfo/:info/:id" exact element={<FollowInfo/>}/>
             <Route path="/explore" exact element={<Explore/>}/>
+            <Route path="/editprofile/:id" exact element={<EditProfile/>}/>
             <Route path="*" exact element={<PageNotFound/>}/>
           </Routes>
         </Router>

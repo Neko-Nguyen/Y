@@ -151,7 +151,7 @@ button.route {
   text-decoration: underline;
 }
 
-/* Post */
+/* post */
 .header {
   display: flex;
   justify-content: space-between;
@@ -184,6 +184,19 @@ button.route {
   color: #00612f;
 }
 
+.user-info {
+  display: flex;
+  align-items: end;
+}
+
+.post-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
+}
+
 .username {
   text-decoration: none;
   color: #111111;
@@ -197,7 +210,7 @@ button.route {
 
 .body {
   text-align: start;
-  padding: 10px 0;
+  padding: 10px 35px;
 }
 
 /* footer */
@@ -257,4 +270,46 @@ button.route {
 textarea {
   height: 30px;
   resize: none;
+}
+
+/* submit button */
+.submit-btn {
+   margin: 10px 0;
+   margin-left: auto;
+   padding: 10px 15px;
+   border-radius: 25px;
+   border: none;
+   height: 40px;
+   width: 70px;
+   background: #222222;
+   color: #ececec;
+   width: 150px;
+}
+
+/* input */
+.input-box {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  margin: 25px;
+}
+
+.input-label {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.input {
+  font-size: 1.25rem;
+  margin: 10px 0 0 0;
+  padding: 5px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #b1b1b1;
+  height: 30px;
+}
+
+.input:focus {
+  outline: none;
+  border-bottom: 1px solid #222222;
 }
