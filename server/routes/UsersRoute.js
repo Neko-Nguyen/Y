@@ -1,6 +1,8 @@
 const express = require("express");
 
 const router = express.Router();
+const { Op } = require("sequelize");
+const { Users, Posts, Likes } = require("../models");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
 
@@ -56,6 +58,18 @@ router.get("/basicinfo/:id", async (req, res) => {
       }]
    });
    res.json(basicInfo);
+});
+
+router.get("/search/:key", async (req, res) => {
+   const key = req.params.key;
+   if (!key) {
+      res.status(400).json({ error: "Search key is required" });  
+   }
+
+   const values = await Users.findAll({
+      where: { username: { [Op.like]: `%${key}%` } }
+   });
+   res.json(values);
 });
 
 router.patch("/basicinfo/:id", upload.single('avatar'), validateToken, async (req, res) => {

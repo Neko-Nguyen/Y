@@ -14,6 +14,7 @@ app.use("/posts", require("./routes/PostsRoute"));
 app.use("/comments", require("./routes/CommentsRoute"));
 app.use("/users", require("./routes/UsersRoute"));
 app.use("/likes", require("./routes/LikesRoute"));
+app.use("/follows", require("./routes/Follows"));
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 db.sequelize

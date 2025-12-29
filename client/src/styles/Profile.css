@@ -20,3 +20,24 @@
   color: #777777;
   font-size: 0.8rem;
 }
+
+.follow-info-container {
+  display: flex;
+}
+
+.follow-info {
+  margin: 15px;
+  margin-left: 0;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #222222;
+}
+
+.follow-info:hover {
+  text-decoration: underline;
+}
+
+.follow-number {
+  font-weight: bold;
+  color: #222222;
+}

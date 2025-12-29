@@ -76,6 +76,11 @@ export async function getBasicInfo(api, id, authState) {
     };
 };
 
+export async function getUserByKey(api, key) {
+    const response = await axios.get(`${api}/users/search/${key}`);
+    return response.data;  
+};
+
 export async function getUsername(api, id) {
     const response = await axios.get(`${api}/users/basicinfo/${id}`);
     if (response.data === null) return "";

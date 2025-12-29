@@ -45,3 +45,8 @@ export async function getPostById(api, id) {
    const response = await axios.get(`${api}/posts/byId/${id}`);
    return response.data;
 };
+
+export async function getPostByKey(api, key) {
+   const response = await axios.get(`${api}/posts/search/${key}`);
+   return response.data;
+};

@@ -1,0 +1,27 @@
+.search-container {
+   display: flex;
+   align-items: center;
+   margin: 5px 20px 0px 20px;
+   border: solid #b1b1b1;
+   border-radius: 25px;
+}
+
+.search-container:focus-within {
+   margin-top: 4px;
+   border: solid 3px #222222;
+}
+
+.search-icon {
+   margin-left: 8px;
+   color: #b1b1b1;
+}
+
+.search-bar {
+   border: none;
+   height: 40px;
+   width: 485px;
+}
+
+.search-bar:focus {
+   outline: none;
+}

@@ -1,4 +1,5 @@
 const express = require("express");
+const { Op } = require("sequelize");
 const router = express.Router();
 const { Posts, Likes } = require("../models");
 const { validateToken } = require("../middlewares/AuthMiddleware");
@@ -30,6 +31,18 @@ router.delete("/:postId", validateToken, async (req, res) => {
    });
 
    res.json("Delete post successfully");
+});
+
+router.get("/search/:key", async (req, res) => {
+   const key = req.params.key;
+   if (!key) {
+      res.status(400).json({ error: "Search key is required" });
+   }
+
+   const values = await Posts.findAll({
+      where: { postText: { [Op.like]: `%${key}%` } }
+   });
+   res.json(values);
 });
 
 module.exports = router;
