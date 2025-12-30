@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { AuthContext } from '../../helpers/AuthContext';
 import { useContext } from 'react';
 
-const defaultCommentObject = {
+const defaultInfo = {
     commentObject: {
         id: 0,
         UserId: 0,
@@ -13,9 +13,9 @@ const defaultCommentObject = {
     deleteCommentFunc: () => {},
 };
 
-function CommentObject({commentInfo=defaultCommentObject}) {
+function CommentObject({ info = defaultInfo }) {
     const { authState } = useContext(AuthContext);
-    const commentObject = commentInfo.commentObject;
+    const commentObject = info.commentObject;
 
     return (
         <>
@@ -28,7 +28,7 @@ function CommentObject({commentInfo=defaultCommentObject}) {
                     <button 
                         className="delete-btn"
                         onClick={() => {
-                            commentInfo.deleteCommentFunc(commentObject.id)
+                            info.deleteCommentFunc(commentObject.id)
                         }}
                     >✖</button>
                 ) : (
