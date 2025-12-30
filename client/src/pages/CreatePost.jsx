@@ -1,4 +1,3 @@
-import "../styles/CreatePost.css";
 import { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
