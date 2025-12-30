@@ -3,14 +3,15 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { deletePost, getHomePosts, likePost } from "../services/PostServices";
-import PostObject from "./object/PostObject";
+import { getHomePosts, likePost } from "../services/PostServices";
+import ListOfPosts from "./object/ListOfPosts";
 
 function Home() {
-   const [listOfPosts, setListOfPosts] = useState([]);
    const { authState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
+   
+   const [listOfPosts, setListOfPosts] = useState([]);
 
    useEffect(() => {
       if (!authState.status) navigate("/");
@@ -18,13 +19,9 @@ function Home() {
          const data = await getHomePosts(api, authState.id);
          setListOfPosts(data);
       }
-
+      
       fetchData();
    }, [api, authState.id, authState.status, navigate, setListOfPosts]);
-
-   async function fetchDeletePost(id) {
-      await deletePost(api, id, navigate);
-   };
 
    async function fetchLikePost(id) {
       if (authState.id > 0) {
@@ -33,24 +30,15 @@ function Home() {
       }
    }
 
-   function navPost(id) {
-      navigate(`/post/${id}`);
-   };
-
    return (
-      <div className="main home list-of-posts">
-         {listOfPosts.map((value, key) => {
-            return (
-               <div className="post home-post" onClick={() => navPost(value.id)}>
-                  <PostObject postInfo={{
-                     postObject: value,
-                     isDirectPost: false,
-                     deletePostFunc: fetchDeletePost,
-                     likePostFunc: fetchLikePost
-                  }}/>
-               </div>
-            );
-         })}
+      <div className="main home">
+         <ListOfPosts info={{
+            listOfPosts: listOfPosts,
+            enableDelete: false,
+            enableLike: true,
+            deletePostFunc: () => {},
+            likePostFunc: fetchLikePost
+         }}/>
       </div>
    );
 }

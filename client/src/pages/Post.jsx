@@ -7,7 +7,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { deletePost, getPostById, likePost } from "../services/PostServices";
 import { addComment, deleteComment, getCommentsByPostId, } from "../services/CommentServices";
 import PostObject from "./object/PostObject";
-import CommentObject from "./object/CommentObject";
+import ListOfComments from "./object/ListOfComments";
 
 function Post() {
    let { id } = useParams();
@@ -77,9 +77,10 @@ function Post() {
                <div className="go-back-text">Post</div>
             </div>
 
-            <PostObject postInfo={{
+            <PostObject info={{
                postObject: postObject,
-               isDirectPost: true,
+               enableDelete: true,
+               enableLike: true,
                deletePostFunc: fetchDeletePost,
                likePostFunc: fetchLikePost
             }}/>
@@ -105,18 +106,10 @@ function Post() {
             </div>
          </div>  
 
-         <div className="list-of-comments">
-            {comments.map((value, key) => {
-               return (
-                  <div className="comment-container">
-                     <CommentObject commentInfo={{
-                        commentObject: value,
-                        deleteCommentFunc: fetchDeleteComment
-                     }}/>
-                  </div>
-               );
-            })}
-         </div>
+         <ListOfComments info={{
+            listOfComments: comments,
+            deleteCommentFunc: fetchDeleteComment
+         }}/>
       </div>
    );
 }

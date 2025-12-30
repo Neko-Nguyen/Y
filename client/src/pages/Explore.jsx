@@ -4,12 +4,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import { getUserByKey } from "../services/UserServices";
 import { getPostByKey } from "../services/PostServices";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
+import ListOfPosts from "./object/ListOfPosts";
+import ListOfUsers from "./object/ListOfUsers";
 
 function Explore() {
+   const api = useContext(ApiEndpointContext);
+   
    const [userResults, setUserResults] = useState([]);
    const [postResults, setPostResults] = useState([]);
    const [key, setKey] = useState("");
-   const api = useContext(ApiEndpointContext);
 
    async function fetchSearch() {
       const newUserResult = await getUserByKey(api, key);
@@ -39,17 +42,17 @@ function Explore() {
             />
          </div>
 
-         {userResults.map(user => {
-            return (<div>
-               {user.username}
-            </div>);
-         })}
+         <ListOfUsers info={{
+            listOfUsers: userResults
+         }}/>
 
-         {postResults.map(post => {
-            return (<div>
-               {post.postText}
-            </div>);
-         })}
+         <ListOfPosts info={{
+            listOfPosts: postResults,
+            enableDelete: false,
+            enableLike: false,
+            deletePostFunc: () => {},
+            likePostFunc: () => {}
+         }}/>
       </div>
    );
 };

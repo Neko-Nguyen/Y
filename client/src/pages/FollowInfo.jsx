@@ -37,8 +37,8 @@ function FollowInfo() {
          </div>
 
          {info === "followings"
-         ? <ListOfUsers listOfUsers={followInfo.followings.map(u => u.Following)}/>
-         : <ListOfUsers listOfUsers={followInfo.followers.map(u => u.Follower)}/>
+            ? <ListOfUsers info={{listOfUsers: followInfo.followings.map(u => u.Following)}}/>
+            : <ListOfUsers info={{listOfUsers: followInfo.followers.map(u => u.Follower)}}/>
          }
       </div>
    );
