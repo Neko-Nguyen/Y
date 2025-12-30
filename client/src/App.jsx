@@ -18,10 +18,11 @@ import { getAuth } from "./services/UserServices";
 import FollowInfo from "./pages/FollowInfo";
 
 function App() {
-  const [authState, setAuthState] = useState({ username: "", id: 0, status: false });
-  const [loading, setLoading] = useState(true);
   const api = useContext(ApiEndpointContext);
-
+  
+  const [authState, setAuthState] = useState({ id: 0, username: "", avatar: "", status: false });
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
     const fetchAuth = async () => {
       const data = await getAuth(api);

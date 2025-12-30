@@ -6,11 +6,12 @@ import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
 import { login } from "../services/UserServices";
 
 function Login() {
-   const [username, setUsername] = useState("");
-   const [password, setPassword] = useState("");
    const { setAuthState } = useContext(AuthContext);
    const api = useContext(ApiEndpointContext);
    let navigate = useNavigate();
+   
+   const [username, setUsername] = useState("");
+   const [password, setPassword] = useState("");
 
    async function fetchLogin() {
       const userData = {username: username, password: password};

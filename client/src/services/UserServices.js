@@ -19,8 +19,9 @@ export async function signin(api, userData, navigate) {
 export function logout() {
     localStorage.removeItem(storage);
     return { 
+        id: 0,
         username: "", 
-        id: 0, 
+        avatar: "",
         status: false 
     };
 };
@@ -31,13 +32,19 @@ export async function login(api, userData) {
 
     if (data.error) {
         alert(data.error);
-        return { username: "", id: 0, status: false };
+        return { 
+            id: 0,
+            username: "", 
+            avatar: "", 
+            status: false 
+        };
     }
 
     localStorage.setItem(storage, data.token);
     return {
-        username: data.username,
         id: data.id,
+        username: data.username,
+        avatar: "",
         status: true
     };
 };
@@ -48,12 +55,18 @@ export async function getAuth(api) {
 
     if (data.error) {
         alert(data.error);
-        return { username: "", id: 0, status: false };
+        return { 
+            id: 0, 
+            username: "", 
+            avatar: "",
+            status: false 
+        };
     }
 
     return {
-        username: data.username,
         id: data.id,
+        username: data.username,
+        avatar: "",
         status: true
     };
 }

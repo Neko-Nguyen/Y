@@ -48,6 +48,12 @@ button {
   width: 150px;
 }
 
+.list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* nav bar above */
 .nav-bar-above {
   display: flex;

@@ -5,10 +5,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { AuthContext } from "../helpers/AuthContext";
 import { ApiEndpointContext } from "../helpers/ApiEndpointContext";
-import { deletePost, likePost } from "../services/PostServices";
+import { likePost } from "../services/PostServices";
 import { follow, getFollowInfo } from "../services/FollowServices";
 import { getBasicInfo } from "../services/UserServices";
-import PostObject from "./object/PostObject";
+import ListOfPosts from "./object/ListOfPosts";
 
 function Profile() {
    let { id } = useParams();
@@ -47,10 +47,6 @@ function Profile() {
       fetchFollowInfo();
    }, [api, id, authState]);
 
-   async function fetchDeletePost(id) {
-      await deletePost(api, id, navigate);
-   };
-
    async function fetchLikePost(id) {
       if (authState.id > 0) {
          const updatedPosts = await likePost(api, id, listOfPosts);
@@ -64,10 +60,6 @@ function Profile() {
 
    function navEditProfile() {
       navigate(`/editprofile/${id}`);
-   };
-
-   function navPost(id) {
-      navigate(`/post/${id}`);
    };
 
    return (
@@ -118,20 +110,13 @@ function Profile() {
             </div>
          </div>
          
-         <div className="list-of-posts">
-            {listOfPosts.map((value, key) => {
-               return (
-                  <div className="post home-post" onClick={() => navPost(value.id)}>
-                     <PostObject postInfo={{
-                        postObject: value,
-                        isDirectPost: false,
-                        deletePostFunc: fetchDeletePost,
-                        likePostFunc: fetchLikePost
-                     }}/>
-                  </div>
-               );
-            })}
-         </div>
+         <ListOfPosts info={{
+            listOfPosts: listOfPosts,
+            enableDelete: false,
+            enableLike: true,
+            deletePostFunc: () => {},
+            likePostFunc: fetchLikePost
+         }}/>
       </div>
    )
 }
