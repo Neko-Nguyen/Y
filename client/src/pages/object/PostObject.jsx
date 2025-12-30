@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../helpers/AuthContext";
 import { ApiEndpointContext } from "../../helpers/ApiEndpointContext";
 
-const defaultPostInfo = {
+const defaultInfo = {
     postObject: {
         id: 0,
         UserId: 0,
@@ -15,25 +15,26 @@ const defaultPostInfo = {
         liked: false,
         Likes: []
     },
-    isDirectPost: false,
+    enableDelete: false,
+    enableLike: false,
     deletePostFunc: () => {},
-    likePostFunc: () => {},
+    likePostFunc: () => {}
 };
 
-function PostObject({postInfo=defaultPostInfo}) {
+function PostObject({ info = defaultInfo }) {
     const { authState } = useContext(AuthContext);
-    const postObject = postInfo.postObject;
+    const postObject = info.postObject;
     const api = useContext(ApiEndpointContext);
 
     function stop(e) { e.stopPropagation(); };
 
     function handleLike(e) {
-        postInfo.likePostFunc(postObject.id);
+        info.likePostFunc(postObject.id);
         stop(e);
     };
 
     function handleDelete(e) {
-        postInfo.deletePostFunc(postObject.id);
+        info.deletePostFunc(postObject.id);
         stop(e);
     };
 
@@ -45,12 +46,13 @@ function PostObject({postInfo=defaultPostInfo}) {
                         ? <img className="post-avatar" src={`${api}/uploads/${postObject.avatar}`} alt="avatar"/>
                         : <img className="post-avatar" src="/default-avatar.png" alt="avatar"/>
                     }
+                    
                     <Link to={`/profile/${postObject.UserId}`} className="username" onClick={stop}>
                         {postObject.username}
                     </Link>
                 </div>
 
-                {postInfo.isDirectPost && authState.username === postObject.username 
+                {info.enableDelete && authState.username === postObject.username 
                     ? <button className="delete-btn" onClick={handleDelete}>✖</button>
                     : <div></div>
                 }
@@ -59,7 +61,7 @@ function PostObject({postInfo=defaultPostInfo}) {
             <div className="body"> {postObject.postText} </div>
 
             <div className="footer">
-                <div className="like-btn-container">
+                {info.enableLike && <div className="like-btn-container">
                     <div 
                         className={postObject.liked ? "like-btn liked" : "like-btn"}
                         onClick={handleLike}
@@ -71,9 +73,9 @@ function PostObject({postInfo=defaultPostInfo}) {
                     </div>
 
                     <label className={postObject.liked ? "like-btn-label liked" : "like-btn-label"}> 
-                        {postObject.Likes.length} 
+                        {postObject.Likes ? postObject.Likes.length : -1} 
                     </label>
-                </div>
+                </div>}
 
                 {postObject.createdAt && <div className="time">
                     {postObject.createdAt.substring(11, 16)} · {postObject.createdAt.substring(0, 10)}
